@@ -1,4 +1,4 @@
-if not ThemePrefs.Get("RainbowMode") and ThemePrefs.Get("VisualStyle") ~= "SRPG5" then return Def.Actor{ InitCommand=function(self) self:visible(false) end } end
+if not ThemePrefs.Get("RainbowMode") and ThemePrefs.Get("VisualStyle") ~= "SRPG5" then return Def.ActorFrame{ LoadActor(THEME:GetPathB("","_shared background")) } end
 
 return Def.ActorFrame{
 	Def.Quad{
