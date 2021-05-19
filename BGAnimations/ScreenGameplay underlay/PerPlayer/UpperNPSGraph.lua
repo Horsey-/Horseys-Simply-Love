@@ -29,8 +29,8 @@ end
 width = width - horizontal_padding
 
 local xpos = {
-	[PLAYER_1] = _screen.cx - width - SL_WideScale(45, 95),
-	[PLAYER_2] = _screen.cx + SL_WideScale(45, 95),
+	[PLAYER_1] = _screen.cx - width - SL_WideScale(47, 97),
+	[PLAYER_2] = _screen.cx + SL_WideScale(47, 97),
 }
 
 
