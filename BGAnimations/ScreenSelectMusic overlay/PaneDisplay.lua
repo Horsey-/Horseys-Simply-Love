@@ -438,7 +438,7 @@ for player in ivalues(PlayerNumber) do
 		end
 	}
 
-	-- Player Profile/GrooveStats Machine Tag 
+	-- Player Profile/GrooveStats Machine Tag
 	af2[#af2+1] = LoadFont("Common Normal")..{
 		Name="PlayerHighScoreName",
 		InitCommand=function(self)
@@ -510,7 +510,7 @@ for player in ivalues(PlayerNumber) do
 		InitCommand=function(self)
 			self:horizalign(right):diffuse(Color.Black)
 			self:xy(pos.col[4], pos.row[2])
-			if not IsUsingWideScreen() then self:maxwidth(66) end
+			self:maxwidth(45)
 			self:queuecommand("Set")
 		end,
 		SetCommand=function(self)
