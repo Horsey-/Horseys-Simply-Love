@@ -108,7 +108,7 @@ af[#af+1] = LoadFont("Common Bold")..{
 
 -- stepartist
 af[#af+1] = LoadFont("Common Normal")..{
-	InitCommand=function(self) self:zoom(0.65):horizalign(align1):x(col1x):y(32) end,
+	InitCommand=function(self) self:zoom(0.65):horizalign(align1):x(col1x):y(32):maxwidth(183) end,
 	DrawStageCommand=function(self)
 		if playerStats and stepartist then
 			self:settext(stepartist)
