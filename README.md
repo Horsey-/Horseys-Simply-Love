@@ -8,11 +8,18 @@ The goal of this fork is to improve upon the mainline Simply Love theme. The ups
 
 The new features that exist in this fork are listed below:
 
- ✅Re-added vocalize support
+✅ Re-added vocalize support
 
  You'll need to download the old vocalize pack [here](http://www.mediafire.com/file/i8osxoy3h2ikdbj/Vocalize.zip/file) and place it in ~/Other/
 
  If you placed the Vocalize pack correctly, the option to select a vocalization will appear in the "Advanced Options" page in Player Options, all the way at the bottom.
+
+✅ Display "Song Folder" or "Group" On SelectMusic and Evaluation
+
+SongDescription on ScreenSelectMusic and TitleAndBanner on ScreenEvaluation have been reworked to show either the song folder or song group from the currently selected song. There is a preference in Simple Love Options to toggle between the two; the default is to display the song Group. This is especially useful when sorting by anything other than group in the SongWheel. The rework of ScreenEvaluation shows only the current group because I don't see a need to display the exact folder a song is in on Evaluation.
+
+![ScreenSelectMusic Rework](https://i.imgur.com/h5TuVsy.png)
+![ScreenEvaluation Rework](https://i.imgur.com/EFAy08c.png)
 
 ## About
 
