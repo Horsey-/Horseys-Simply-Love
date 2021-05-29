@@ -40,6 +40,8 @@ local PlayerDefaults = {
 
 				ShowFaPlusWindow = false,
 				ShowEXScore = false,
+
+				Vocalization = "Random",
 			}
 			self.Streams = {
 				-- Chart identifiers for caching purposes.

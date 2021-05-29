@@ -2,9 +2,17 @@
 
 ![Arrow Logo](https://i.imgur.com/oZmxyGo.png)
 
-## About this Forks
+## 🤠About This Fork🐴
 
 The goal of this fork is to improve upon the mainline Simply Love theme. The upstream maintainers are very particular in what they will accept as a pull request based on their own personal idea of what the theme should be. I take a far more progressive approach to my fork and will actively look to merge new and interesting ideas from the many forks out there. Sometimes though, my fork aims to clean up /many/ of the inconsistencies and general UI oddities that plague the mainline branch. I hope you enjoy this fork if you find that you prefer it to the mainline theme.
+
+The new features that exist in this fork are listed below:
+
+ ✅Re-added vocalize support
+
+ You'll need to download the old vocalize pack [here](http://www.mediafire.com/file/i8osxoy3h2ikdbj/Vocalize.zip/file) and place it in ~/Other/
+
+ If you placed the Vocalize pack correctly, the option to select a vocalization will appear in the "Advanced Options" page in Player Options, all the way at the bottom.
 
 ## About
 
