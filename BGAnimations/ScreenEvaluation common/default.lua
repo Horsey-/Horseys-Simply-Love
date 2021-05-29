@@ -89,6 +89,8 @@ end
 
 t[#t+1] = LoadActor("./Panes/default.lua", NumPanes)
 
+-- code for handling score vocalization
+t[#t+1] = LoadActor("./ScoreVocalization.lua")
 -- -----------------------------------------------------------------------
 
 -- The actor that will automatically upload scores to GrooveStats.
