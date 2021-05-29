@@ -96,33 +96,6 @@ af2[#af2+1] = NPS_Histogram(player, width, height)..{
 -- We do this in parent actorframe because we want to "stall" before we parse.
 af2[#af2]["CurrentSteps"..pn.."ChangedMessageCommand"] = nil
 
--- The Peak NPS text
-af2[#af2+1] = LoadFont("Common Normal")..{
-	Name="NPS",
-	Text="Peak NPS: ",
-	InitCommand=function(self)
-		self:horizalign(left):zoom(0.8)
-		if player == PLAYER_1 then
-			self:addx(60):addy(-41)
-		else
-			self:addx(-136):addy(-41)
-		end
-
-		-- We want black text in Rainbow mode, white otherwise.
-		self:diffuse(ThemePrefs.Get("RainbowMode") and {0, 0, 0, 1} or {1, 1, 1, 1})
-	end,
-	HideCommand=function(self)
-		self:settext("Peak NPS: ")
-		self:visible(false)
-	end,
-	RedrawCommand=function(self)
-		if SL[pn].Streams.PeakNPS ~= 0 then
-			self:settext(("Peak NPS: %.1f"):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate))
-			self:visible(true)
-		end
-	end,
-}
-
 -- Breakdown
 af2[#af2+1] = Def.ActorFrame{
 	Name="Breakdown",
@@ -155,12 +128,15 @@ af2[#af2+1] = Def.ActorFrame{
 		HideCommand=function(self)
 			self:settext("")
 		end,
+		--we're going to move the Peak NPS text to the beginning of the breakdown
+		--we need to do it this way because of layering conflicts and being unable to match the stepartist animation when the screen loads
+		--by moving PeakNPS here, there's more room for the Stepartist text
 		RedrawCommand=function(self)
 			local textZoom = 0.8
-			self:settext(GenerateBreakdownText(pn, 0))
+			self:settext(("Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate)..GenerateBreakdownText(pn, 0))
 			local minimization_level = 1
 			while self:GetWidth() > (width/textZoom) and minimization_level < 4 do
-				self:settext(GenerateBreakdownText(pn, minimization_level))
+				self:settext(("Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate)..GenerateBreakdownText(pn, minimization_level))
 				minimization_level = minimization_level + 1
 			end
 		end,
