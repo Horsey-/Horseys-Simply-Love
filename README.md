@@ -21,6 +21,10 @@ SongDescription on ScreenSelectMusic and TitleAndBanner on ScreenEvaluation have
 ![ScreenSelectMusic Rework](https://i.imgur.com/h5TuVsy.png)
 ![ScreenEvaluation Rework](https://i.imgur.com/EFAy08c.png)
 
+✅ Expand Personal Highscore name to 9 characters (configurable in Simply Love Options)
+ ![Highscore Expansion (Entry)](https://i.imgur.com/G574IaR.png)
+ ![Highscore Expansion (SL Options)](https://i.imgur.com/pxI4jsO.png)
+
 ## About
 
 Simply Love is a StepMania 5 theme for the post-ITG community.

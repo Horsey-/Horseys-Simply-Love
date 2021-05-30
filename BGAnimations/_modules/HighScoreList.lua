@@ -153,7 +153,7 @@ for i=lower,upper do
 	row[#row+1] = LoadFont(Font)..{
 		Name="Name",
 		Text=name,
-		InitCommand=function(self) self:horizalign(left):xy(-110, row_index*row_height) end,
+		InitCommand=function(self) self:horizalign(center):xy(-75, row_index*row_height):maxwidth(80) end
 	}
 
 	row[#row+1] = LoadFont(Font)..{

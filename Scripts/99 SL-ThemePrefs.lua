@@ -234,6 +234,13 @@ SL_CustomPrefs.Get = function()
 		},
 
 		-- - - - - - - - - - - - - - - - - - - -
+ 		HighscoreCharLimit = {
+ 			Default = 9,
+ 			Choices = { 4, 5, 6, 7, 8, 9 },
+ 			Values  = { 4, 5, 6, 7, 8, 9 }
+ 		},
+
+		-- - - - - - - - - - - - - - - - - - - -
 		LastActiveEvent =
 		{
 			Default = "",
