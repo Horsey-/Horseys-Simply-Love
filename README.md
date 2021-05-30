@@ -36,6 +36,12 @@ SongDescription on ScreenSelectMusic and TitleAndBanner on ScreenEvaluation have
 
 ![HasEdit image](https://i.imgur.com/elOjMHM.png)
 
+✅ Slightly redesigned ScreenEvaluation to clean up "floating" BitmapText:
+  *Difficulty number is now in the coloured box along with the difficulty name (beginner, expert, etc).
+  *Style (single/double) string was removed from the evaluation screen because it's redundant information when there is a graphical representation of style in the top right of the screen.
+  *Song credit information is now in a quad that is the same colour as the difficulty box but darkened (ligher colour in rainbow mode). The difficulty box was also widened from a square to a rectangle to better fit the difficulty name text.
+![ScreenEvaluation cleanup](https://i.imgur.com/KL6WYIw.png)
+
 ## About
 
 Simply Love is a StepMania 5 theme for the post-ITG community.
