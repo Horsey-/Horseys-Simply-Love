@@ -54,6 +54,11 @@ SongDescription on ScreenSelectMusic and TitleAndBanner on ScreenEvaluation have
 
  In a future commit, I would like to change the I/O buttons for this screen making MenuLeft/PadLeft and MenuRight/PadRight select difficulty (without needing to double tap), and MenuUp and MenuDown scroll through the SongWheel.
 
+ ✅ Show a profile card for players with a local profile (and should work too with USB profiles, but they are untested beacuse I haven't set up USB profiles yet). The profile card replaces the player name and avatar in the footer of ScreenSelectMusicWide and ScreenEvaluationStage. The profile card shows how many quads, tri-stars, duo-stars, and single-stars a player has achieved across ALL gametypes and difficulties. There is also a cool readout for how many times a player has attempted a particular song. Guest profiles (no profile) do not have a corresponding profile card. Make sure you make a local (or set up USB profiles) for yourself and any guests you might have over!
+
+ ![Screen Shot 2021-06-14 at 12 39 37 AM](https://user-images.githubusercontent.com/5679966/121857261-48a1c500-ccaa-11eb-964f-e23d76bf848b.png)
+ ![Screen Shot 2021-06-14 at 12 40 07 AM](https://user-images.githubusercontent.com/5679966/121857254-47709800-ccaa-11eb-8b6e-440a79d7cd68.png)
+
  ![ScreenSelectMusic rework](https://i.imgur.com/3tSx2bt.png)
 
 ## About
