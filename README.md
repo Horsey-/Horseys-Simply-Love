@@ -25,6 +25,11 @@ SongDescription on ScreenSelectMusic and TitleAndBanner on ScreenEvaluation have
  ![Highscore Expansion (Entry)](https://i.imgur.com/G574IaR.png)
  ![Highscore Expansion (SL Options)](https://i.imgur.com/pxI4jsO.png)
 
+ ✅ Added a clock on ScreenSelectMusic in CoinMode_Home. This is useful for home players that want to keep track of the time while playing.
+
+ ![ScreenSelectMusic clock](https://i.imgur.com/Mhjj8qL.png)
+ ![ScreenEvaluation clock](https://i.imgur.com/aNRHfFr.png)
+
 ## About
 
 Simply Love is a StepMania 5 theme for the post-ITG community.
