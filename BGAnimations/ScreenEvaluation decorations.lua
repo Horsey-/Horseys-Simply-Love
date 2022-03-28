@@ -13,7 +13,7 @@ local decorations = LoadActor(THEME:GetPathB("ScreenWithMenuElements", "decorati
 -- a local ActorFrame so that it can be assigned a custom update function
 -- that refreshes the date and time if the player stays on this screen for a while
 
-local DateFormat = "%04d/%02d/%02d %02d:%02d"
+local DateFormat = "%2d:%02d      %s   %02d,  %04d"
 local timestamp_bmt = nil
 
 local Update = function(af)
@@ -29,24 +29,24 @@ af.InitCommand=function(self)
 end
 
 -- add a BitmapText to this ActorFrame
-af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
+af[#af+1] = LoadFont("Common Bold")..{
 	Name="DateTime",
 	InitCommand=function(self)
 		timestamp_bmt = self
 
 		self:x(_screen.cx):horizalign(center)
-		self:zoom(0.18)
+		self:zoom(0.38)
 	end,
 	OnCommand=function(self)
 		-- y offset for ScreenEvaluationStage or ScreenEvaluationNonstop
 		-- or anything else that inherits from ScreenEvaluation
-		self:y(_screen.h - 17)
+		self:y(_screen.h - 13)
 
 		-- use a slightly diffrent y offset for ScreenEvaluationSummary
 		local screen = SCREENMAN:GetTopScreen()
 		if screen then
 			if screen:GetName() == 'ScreenEvaluationSummary' then
-				self:y(_screen.h - 20)
+				self:y(_screen.h - 18)
 			end
 		end
 
@@ -59,7 +59,7 @@ af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
 		self:playcommand("Refresh")
 	end,
 	RefreshCommand=function(self)
-		self:settext(DateFormat:format(Year(), MonthOfYear()+1, DayOfMonth(), Hour(), Minute()))
+		self:settext(DateFormat:format(Hour(), Minute(), MonthToString(MonthOfYear()), DayOfMonth(), Year()))
 	end
 }
 
