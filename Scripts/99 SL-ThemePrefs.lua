@@ -245,6 +245,15 @@ SL_CustomPrefs.Get = function()
 		{
 			Default = "",
 		},
+		-- - - - - - - - - - - - - - - - - - - -
+		NoBannerUseGroupBanner = {
+			Default = true,
+			Choices = {
+				THEME:GetString("ThemePrefs", "UseGroupBanner"),
+				THEME:GetString("ThemePrefs", "NoUseGroupBanner")
+			},
+			Values 	= { true , false }
+		},
 	}
 end
 

@@ -35,18 +35,39 @@ if SongOrCourse and SongOrCourse:HasBanner() then
 		end,
 	}
 else
-	--fallback banner
-	af[#af+1] = LoadActor(banner.directory .. "/banner" .. SL.Global.ActiveColorIndex .. " (doubleres).png")..{
-		InitCommand=function(self)
-			if SL.Global.GameMode=="Casual" or GAMESTATE:IsCourseMode() then
-				self:zoom(0.7)
-				self:y(66)
-			else
-				self:zoom(0.6)
-				self:y(41)
-			end
-		end
-	}
+	if HasGroupBanner() then
+		--group banner, if toggled on in settings
+ 		af[#af+1] = Def.Banner{
+ 			Name="GroupBanner",
+ 			InitCommand=function(self)
+ 				self:Load(GetGroupBanner());
+ 			end,
+ 			OnCommand=function(self)
+ 				self:setsize(banner.width, 164)
+ 				if SL.Global.GameMode=="Casual" or GAMESTATE:IsCourseMode() then
+ 					self:zoom(0.7)
+ 					self:y(66)
+ 				else
+ 					self:zoom(0.6)
+ 					self:y(41)
+ 				end
+ 			end,
+ 		};
+ 	else
+ 		--fallback banner
+ 		af[#af+1] = LoadActor(banner.directory .. "/banner" .. SL.Global.ActiveColorIndex .. " (doubleres).png")..{
+ 			InitCommand=function(self)
+ 				self:setsize(banner.width, 164)
+ 				if SL.Global.GameMode=="Casual" or GAMESTATE:IsCourseMode() then
+ 					self:zoom(0.7)
+ 					self:y(66)
+ 				else
+ 					self:zoom(0.6)
+ 					self:y(41)
+ 				end
+ 			end
+ 		}
+	end
 end
 
 -- quad behind the song/course title text
