@@ -40,9 +40,27 @@ t[#t+1] = Def.Sprite{
 	end
 }
 
+t[#t+1] = Def.Sprite{
+	Name="GroupBanner",
+	OnCommand=function(self) self:setsize(418,164):visible(false):playcommand("Set") end,
+	CurrentSongChangedMessageCommand=function(self) self:playcommand("Set") end,
+	CurrentCourseChangedMessageCommand=function(self) self:playcommand("Set") end,
+	SetCommand=function(self)
+		SongOrCourse = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse() or GAMESTATE:GetCurrentSong();
+		if SongOrCourse and not SongOrCourse:HasBanner() and HasGroupBanner() then
+			self:Load(GetGroupBanner());
+			self:setsize(418,164);
+			self:visible(true);
+		else
+			self:visible(false);
+		end
+	end,
+}
+
 if PREFSMAN:GetPreference("ShowBanners") then
 	t[#t+1] = Def.ActorProxy{
 		Name="BannerProxy",
+		OnCommand=cmd(setsize,418,164),
 		BeginCommand=function(self)
 			local banner = SCREENMAN:GetTopScreen():GetChild('Banner')
 			self:SetTarget(banner)
