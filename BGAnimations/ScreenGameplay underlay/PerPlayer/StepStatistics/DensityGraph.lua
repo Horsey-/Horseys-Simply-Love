@@ -124,7 +124,7 @@ local text = LoadFont("Common Normal")..{
 		end
 
 		self:y( -self:GetHeight()/2 - 2 )
-		self:settext( ("%s: %g"):format(THEME:GetString("ScreenGameplay", "PeakNPS"), round(my_peak * SL.Global.ActiveModifiers.MusicRate,2)) )
+		self:settext(("%s: %g   "):format(THEME:GetString("ScreenGameplay", "PeakNPS"), round(my_peak * SL.Global.ActiveModifiers.MusicRate,2)) .. ("Peak eBPM: %.0f"):format(round(my_peak * 15 * SL.Global.ActiveModifiers.MusicRate,2)))
 	end,
 }
 
