@@ -113,7 +113,8 @@ af2[#af2+1] = Def.ActorFrame{
 		InitCommand=function(self)
 			local textHeight = 17
 			local textZoom = 0.65
-			self:maxwidth(width/textZoom):zoom(textZoom)
+			--let's give some padding so the text doesn't touch the outer edges of this box
+			self:maxwidth(width/textZoom-10):zoom(textZoom)
 			self:addy(-6)
 		end,
 		HideCommand=function(self)
@@ -156,7 +157,8 @@ af3[#af3+1] = LoadFont("Common normal")..{
 		local textHeight = 17
 		local textZoom = 0.65
 		self:zoom(textZoom):horizalign(center)
-		self:maxwidth(width/textZoom)
+		--let's give some padding so the text doesn't touch the outer edges of this box
+		self:maxwidth(width/textZoom-10)
 		self:y(-height/2 - 6)
 		-- self:diffuse(Color.Black)
 	end,
@@ -167,9 +169,9 @@ af3[#af3+1] = LoadFont("Common normal")..{
 		local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
 		local totalMeasures = streamMeasures + breakMeasures
 		if streamMeasures == 0 then
-			self:settext(("   Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate))
+			self:settext(("   Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate) .. ("Peak eBPM: %.0f"):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate * 15))
 		else
-			self:settext("Total Stream: " .. string.format("%d/%d (%0.1f%%)", streamMeasures, totalMeasures, streamMeasures/totalMeasures*100) .. ("   Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate))
+			self:settext("Total Stream: " .. string.format("%d/%d (%0.1f%%)", streamMeasures, totalMeasures, streamMeasures/totalMeasures*100) .. ("   Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate) .. ("Peak eBPM: %.0f"):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate * 15))
 		end
 	end
 }

@@ -123,7 +123,8 @@ af2[#af2+1] = Def.ActorFrame{
 		InitCommand=function(self)
 			local textHeight = 17
 			local textZoom = 0.8
-			self:maxwidth(width/textZoom):zoom(textZoom)
+			--let's give some padding so the text doesn't touch the outer edges of this box
+			self:maxwidth(width/textZoom-10):zoom(textZoom)
 		end,
 		HideCommand=function(self)
 			self:settext("")
@@ -133,10 +134,10 @@ af2[#af2+1] = Def.ActorFrame{
 		--by moving PeakNPS here, there's more room for the Stepartist text
 		RedrawCommand=function(self)
 			local textZoom = 0.8
-			self:settext(("Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate)..GenerateBreakdownText(pn, 0))
+			self:settext(("Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate)..GenerateBreakdownText(pn, 0) .. ("   Peak eBPM: %.0f"):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate * 15))
 			local minimization_level = 1
 			while self:GetWidth() > (width/textZoom) and minimization_level < 4 do
-				self:settext(("Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate)..GenerateBreakdownText(pn, minimization_level))
+				self:settext(("Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate)..GenerateBreakdownText(pn, minimization_level) .. ("   Peak eBPM: %.0f"):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate * 15))
 				minimization_level = minimization_level + 1
 			end
 		end,
