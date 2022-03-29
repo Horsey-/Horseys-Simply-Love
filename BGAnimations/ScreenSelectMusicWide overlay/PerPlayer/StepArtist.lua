@@ -29,28 +29,17 @@ return Def.ActorFrame{
 
 	-- depending on the value of pn, this will either become
 	-- an AppearP1Command or an AppearP2Command when the screen initializes
-	["Appear"..pn.."Command"]=function(self) self:visible(true):zoomy(0):sleep(0.2):accelerate(0.2):zoomy(1):decelerate(0.2):zoomy(0.6):accelerate(0.1):zoomy(0.8) end,
+	["Appear"..pn.."Command"]=function(self) self:visible(true):zoomy(0):sleep(0.2):accelerate(0.2):zoomy(1):decelerate(0.2):zoomy(0.6):accelerate(0.1):zoomy(1) end,
 
 	InitCommand=function(self)
 		self:visible( false ):halign( p )
+		self:y(_screen.cy + 12.5)
 
 		if player == PLAYER_1 then
-			self:x( _screen.cx - (IsUsingWideScreen() and 329 or 320))
-			if GAMESTATE:IsCourseMode() then
-				self:y(_screen.cy + 3)
-			else
-				self:y(_screen.cy - 16)
-			end
+			self:x( _screen.cx - 427.5)
 
 		elseif player == PLAYER_2 then
-
-			if GAMESTATE:IsCourseMode() then
-				self:x( _screen.cx - 183)
-				self:y(_screen.cy + 112)
-			else
-				self:x( _screen.cx - 217)
-				self:y(_screen.cy + 67)
-			end
+			self:x( _screen.cx + 254.5)
 		end
 
 		if GAMESTATE:IsHumanPlayer(player) then
@@ -61,20 +50,12 @@ return Def.ActorFrame{
 	-- colored background
 	Def.ActorFrame{
 		InitCommand=function(self)
+			self:y(4)
 			if player == PLAYER_1 then
-				self:x((IsUsingWideScreen() and 105 or 105))
-				self:y(1)
+				self:x(106)
 			elseif player == PLAYER_2 then
-				--the UI layout in CourseMode is different because there are no density graphs in CourseMode
-				if GAMESTATE:IsCourseMode() then
-					self:x((IsUsingWideScreen() and 67 or 86))
-					self:rotationz(-180)
-					self:y(1)
-				else
-					self:x(67)
-					self:rotationy(180)
-					self:y(7)
-				end
+				self:x(67)
+				self:rotationy(180)
 			end
 	end,
 
@@ -82,14 +63,14 @@ return Def.ActorFrame{
 			InitCommand=function(self)
 				-- these coordinates aren't neat and tidy, but they do create three triangles
 				-- that fit together to approximate hurtpiggypig's original png asset
-				--IsUsingWideScreen() addition adds length, -17 changes the height, and +18 moves the "carrot" to under "STEPS"
+				--change 422 for length, -17 changes the height, and +18 moves the "carrot" to under "STEPS"
 				local verts = {
 					--   x   y  z    r,g,b,a
 					{{-113, -15-17, 0}, {1,1,1,1}},
-					{{ (IsUsingWideScreen() and 113+346 or 113+328), -15-17, 0}, {1,1,1,1}},
-					{{ (IsUsingWideScreen() and 113+346 or 113+328), 16, 0}, {1,1,1,1}},
+					{{ 422, -15-17, 0}, {1,1,1,1}},
+					{{ 422, 16, 0}, {1,1,1,1}},
 
-					{{ (IsUsingWideScreen() and 113+346 or 113+328), 16, 0}, {1,1,1,1}},
+					{{ 422, 16, 0}, {1,1,1,1}},
 					{{-113, 16, 0}, {1,1,1,1}},
 					{{-113, -15-17, 0}, {1,1,1,1}},
 
@@ -124,11 +105,9 @@ return Def.ActorFrame{
  			if player == PLAYER_1 then
  				self:horizalign(left)
  				self:x(3)
- 				self:y(-3)
  			elseif player == PLAYER_2 then
  				self:horizalign(right)
  				self:x(170)
- 				self:y(3)
  			end
 		end,
 		UpdateTrailTextMessageCommand=function(self, params)
@@ -140,23 +119,13 @@ return Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		InitCommand=function(self)
 			self:diffuse(color("#1e282f"))
- 			self:maxwidth((IsUsingWideScreen() and 232 or 225))
+ 			self:maxwidth(217)
  				if player == PLAYER_1 then
+					self:x(46)
  					self:horizalign(left)
- 					if GAMESTATE:IsCourseMode() then
- 						self:x(31)
- 					else
- 						self:x(46)
- 					end
- 					self:y(-3)
- 				elseif player == PLAYER_2 then
+				elseif player == PLAYER_2 then
+					self:x(126)
  					self:horizalign(right)
- 					if GAMESTATE:IsCourseMode() then
- 						self:x(141)
- 					else
- 						self:x(126)
- 					end
- 					self:y(3)
  				end
 		end,
 		ResetCommand=function(self)

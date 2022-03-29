@@ -7,19 +7,15 @@ local pn = ToEnumShortString(player)
 
 -- Height and width of the density graph.
 local height = 64
-local width = IsUsingWideScreen() and 286 or 276
+local width = 267
 
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:visible( GAMESTATE:IsHumanPlayer(player) )
-		self:xy(_screen.cx-182, _screen.cy+23)
+		self:xy(_screen.cx-293.5, _screen.cy+56)
 
 		if player == PLAYER_2 then
-			self:addy(height+24)
-		end
-
-		if IsUsingWideScreen() then
-			self:addx(-5)
+			self:x(_screen.cx+293.5)
 		end
 	end,
 	PlayerJoinedMessageCommand=function(self, params)
@@ -101,18 +97,12 @@ af2[#af2+1] = Def.ActorFrame{
 	Name="Breakdown",
 	InitCommand=function(self)
 		local actorHeight = 17
-		self:addy(height/2 - actorHeight/2)
-	end,
-	HideCommand=function(self)
-		self:visible(false)
-	end,
-	RedrawCommand=function(self)
-		self:visible(true)
+		self:addy(height/2 - actorHeight/2 + 22)
 	end,
 
 	Def.Quad{
 		InitCommand=function(self)
-			local bgHeight = 17
+			local bgHeight = 27
 			self:diffuse(color("#000000")):zoomto(width, bgHeight):diffusealpha(0.5)
 		end
 	},
@@ -122,21 +112,20 @@ af2[#af2+1] = Def.ActorFrame{
 		Name="BreakdownText",
 		InitCommand=function(self)
 			local textHeight = 17
-			local textZoom = 0.8
+			local textZoom = 0.65
 			self:maxwidth(width/textZoom):zoom(textZoom)
+			self:addy(-6)
 		end,
 		HideCommand=function(self)
 			self:settext("")
 		end,
-		--we're going to move the Peak NPS text to the beginning of the breakdown
-		--we need to do it this way because of layering conflicts and being unable to match the stepartist animation when the screen loads
-		--by moving PeakNPS here, there's more room for the Stepartist text
+
 		RedrawCommand=function(self)
-			local textZoom = 0.8
-			self:settext(("Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate)..GenerateBreakdownText(pn, 0))
+			local textZoom = 0.7
+			self:settext("Breakdown: " .. GenerateBreakdownText(pn, 0))
 			local minimization_level = 1
 			while self:GetWidth() > (width/textZoom) and minimization_level < 4 do
-				self:settext(("Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate)..GenerateBreakdownText(pn, minimization_level))
+				self:settext("Breakdown: " .. GenerateBreakdownText(pn, minimization_level))
 				minimization_level = minimization_level + 1
 			end
 		end,
@@ -146,39 +135,48 @@ af2[#af2+1] = Def.ActorFrame{
 af2[#af2+1] = Def.ActorFrame{
 	Name="PatternInfo",
 	InitCommand=function(self)
-		if player == PLAYER_1 then
-			self:addy(64 + 24)
-		else
-			self:addy(-64 - 24)
-		end
-		self:visible(GAMESTATE:GetNumSidesJoined() == 1)
+		self:addy(90)
 	end,
-	PlayerJoinedMessageCommand=function(self, params)
-		self:visible(GAMESTATE:GetNumSidesJoined() == 1)
-	end,
-	PlayerUnjoinedMessageCommand=function(self, params)
-		self:visible(GAMESTATE:GetNumSidesJoined() == 1)
-	end,
-
-	-- Background for the additional chart info.
-	-- Only shown in 1 Player mode
-	Def.Quad{
-		InitCommand=function(self)
-			self:diffuse(color("#1e282f")):zoomto(width, height)
-		end,
-	}
 }
 
 local af3 = af2[#af2]
 
 local layout = {
-	{"Crossovers", "Footswitches"},
-	{"Sideswitches", "Jacks"},
-	{"Brackets", "Total Stream"},
+	{"Crossovers"},
+ 	{"Sideswitches"},
+ 	{"Footswitches"},
+ 	{"Jacks"},
+ 	{"Brackets"}
+}
+
+af3[#af3+1] = LoadFont("Common normal")..{
+	Text="",
+	Name="Total Stream",
+	InitCommand=function(self)
+		local textHeight = 17
+		local textZoom = 0.65
+		self:zoom(textZoom):horizalign(center)
+		self:maxwidth(width/textZoom)
+		self:y(-height/2 - 6)
+		-- self:diffuse(Color.Black)
+	end,
+	HideCommand=function(self)
+		self:settext("")
+	end,
+	RedrawCommand=function(self)
+		local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
+		local totalMeasures = streamMeasures + breakMeasures
+		if streamMeasures == 0 then
+			self:settext(("   Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate))
+		else
+			self:settext("Total Stream: " .. string.format("%d/%d (%0.1f%%)", streamMeasures, totalMeasures, streamMeasures/totalMeasures*100) .. ("   Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate))
+		end
+	end
 }
 
 local colSpacing = 150
-local rowSpacing = 20
+local rowSpacing = 15
+--value
 
 for i, row in ipairs(layout) do
 	for j, col in pairs(row) do
@@ -187,14 +185,15 @@ for i, row in ipairs(layout) do
 			Name=col .. "Value",
 			InitCommand=function(self)
 				local textHeight = 17
-				local textZoom = 0.8
+				local textZoom = 0.7
 				self:zoom(textZoom):horizalign(right)
 				if col == "Total Stream" then
-					self:maxwidth(100)
+					self:maxwidth(300)
 				end
-				self:xy(-width/2 + 40, -height/2 + 10)
+				self:xy(-width/2 + 105, -height/2 + 10)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
+				self:diffuse(Color.Black)
 			end,
 			HideCommand=function(self)
 				if col ~= "Total Stream" then
@@ -217,17 +216,18 @@ for i, row in ipairs(layout) do
 				end
 			end
 		}
-
+-- label
 		af3[#af3+1] = LoadFont("Common Normal")..{
 			Text=col,
 			Name=col,
 			InitCommand=function(self)
 				local textHeight = 17
-				local textZoom = 0.8
+				local textZoom = 0.7
 				self:maxwidth(width/textZoom):zoom(textZoom):horizalign(left)
-				self:xy(-width/2 + 50, -height/2 + 10)
+				self:xy(-width/2 + 108, -height/2 + 10)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
+				self:diffuse(Color.Black)
 			end,
 		}
 

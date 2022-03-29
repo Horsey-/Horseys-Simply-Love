@@ -1,12 +1,12 @@
 local MusicWheel, SelectedType
-local group_durations = LoadActor("./GroupDurations.lua")
+local group_durations = LoadActor("../../ScreenSelectMusic overlay/SongDescription/GroupDurations.lua")
 
 -- width of background quad
-local _w = IsUsingWideScreen() and 320 or 310
+local _w = 320
 
 local af = Def.ActorFrame{
 	OnCommand=function(self)
-		self:xy(_screen.cx - (IsUsingWideScreen() and 170 or 165), _screen.cy - 56.5)
+		self:xy(_screen.cx, SCREEN_TOP+193)
 	end,
 
 	CurrentSongChangedMessageCommand=function(self)    self:playcommand("Set") end,
@@ -20,7 +20,7 @@ local af = Def.ActorFrame{
 -- background Quad for Artist, BPM, and Song Length
 af[#af+1] = Def.Quad{
 	InitCommand=function(self)
-		self:setsize( _w, 50 )
+		self:setsize( _w, 70 )
 		self:diffuse(color("#1e282f"))
 
 		if ThemePrefs.Get("RainbowMode") then self:diffusealpha(0.9) end
@@ -29,15 +29,12 @@ af[#af+1] = Def.Quad{
 
 -- ActorFrame for Folder/Group, Artist, BPM, and Song length
 af[#af+1] = Def.ActorFrame{
-	InitCommand=function(self) self:xy(-110,-6) end,
+	InitCommand=function(self) self:xy(-110,-16) end,
 
 	-- ----------------------------------------
 	-- Song Folder Label
 	LoadFont("Common Normal")..{
 		InitCommand=function(self)
-			if GAMESTATE:IsCourseMode() then
-				self:visible(false)
-			end
 			self:zoom(0.9)
 			self:horizalign(right)
 			self:y(-10)
@@ -134,13 +131,10 @@ af[#af+1] = Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		Text=THEME:GetString("SongDescription", "BPM"):upper(),
 		InitCommand=function(self)
-			self:align(1,0)
+			self:horizalign(center)
 			self:diffuse(0.5,0.5,0.5,1)
-			if GAMESTATE:IsCourseMode() then
-				self:y(10)
-			else
-				self:y(17):zoom(0.8)
-			end
+			self:xy(-12,24)
+ 			self:zoom(0.8)
 		end
 	},
 
@@ -148,12 +142,8 @@ af[#af+1] = Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		InitCommand=function(self)
 			-- vertical align has to be middle for BPM value in case of split BPMs having a line break
-			self:align(0, 0.5):diffuse(1,1,1,1):vertspacing(-8):x(5)
-			if GAMESTATE:IsCourseMode() then
-				self:y(17)
-			else
-				self:y(23)
-			end
+			self:horizalign(center):diffuse(1,1,1,1):vertspacing(-8):x(5):maxwidth(78)
+			self:xy(-12,40)
 		end,
 		SetCommand=function(self)
 
@@ -230,24 +220,14 @@ af[#af+1] = Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		Text=THEME:GetString("SongDescription", "Length"):upper(),
 		InitCommand=function(self)
-			if GAMESTATE:IsCourseMode() then
-				self:align(1,0):diffuse(0.5,0.5,0.5,1):x(_w-130):y(10)
-			else
-				self:align(1,0):diffuse(0.5,0.5,0.5,1):x(_w-130):y(17):zoom(0.8)
-			end
-
+			self:horizalign(center):diffuse(0.5,0.5,0.5,1):xy(233,24):zoom(0.8)
 		end
 	},
 
 	-- Song Duration Value
 	LoadFont("Common Normal")..{
 		InitCommand=function(self)
-			self:align(0,0):x(_w-130 + 5)
-			if GAMESTATE:IsCourseMode() then
-				self:y(10)
-			else
-				self:y(17):zoom(0.8)
-			end
+			self:horizalign(center):xy(233,40):zoom(0.8)
 		end,
 		SetCommand=function(self)
 			if MusicWheel == nil then MusicWheel = SCREENMAN:GetTopScreen():GetMusicWheel() end
@@ -297,7 +277,7 @@ af[#af+1] = Def.ActorFrame{
 				self:settext("")
 			end
 		end
-	}
+	},
 }
 
 if not GAMESTATE:IsEventMode() then
@@ -305,8 +285,8 @@ if not GAMESTATE:IsEventMode() then
 	-- long/marathon version bubble graphic and text
 	af[#af+1] = Def.ActorFrame{
 		InitCommand=function(self)
-			self:x( IsUsingWideScreen() and 98 or 92 )
-			self:y(-12+13)
+			self:x(98)
+ 			self:y(-8)
 		end,
 		SetCommand=function(self)
 			local song = GAMESTATE:GetCurrentSong()
@@ -328,9 +308,9 @@ if not GAMESTATE:IsEventMode() then
 					{{-113, 16, 0}, {1,1,1,1}},
 					{{-113, -15, 0}, {1,1,1,1}},
 
-					{{ -98+2, 16-5, 0}, {1,1,1,1}},
-					{{ -78+2, 16-5, 0}, {1,1,1,1}},
-					{{ -88+2, 29-5, 0}, {1,1,1,1}},
+					{{ -98+134, 16-5, 0}, {1,1,1,1}},
+					{{ -78+134, 16-5, 0}, {1,1,1,1}},
+					{{ -88+134, 29-5, 0}, {1,1,1,1}},
 				}
 				self:SetDrawState({Mode="DrawMode_Triangles"}):SetVertices(verts)
 				self:diffuse(GetCurrentColor())

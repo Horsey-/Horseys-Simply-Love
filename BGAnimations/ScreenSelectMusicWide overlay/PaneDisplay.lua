@@ -8,7 +8,7 @@ local footer_height = 32
 -- height of the PaneDisplay in pixels
 local pane_height = 60
 
-local text_zoom = WideScale(0.8, 0.9)
+local text_zoom = 0.7
 
 -- -----------------------------------------------------------------------
 -- Convenience function to return the SongOrCourse and StepsOrTrail for a
@@ -190,30 +190,35 @@ end
 -- -----------------------------------------------------------------------
 -- define the x positions of four columns, and the y positions of three rows of PaneItems
 local pos = {
-	col = { WideScale(-104,-133), WideScale(-36,-38), WideScale(54,76), WideScale(150, 190) },
-	row = { 13, 31, 49 }
+	col = { -100, -36, 54, 150 },
+
+ 	row = {
+ 		-24,
+ 		-9,
+ 		6,
+ 		21,
+ 		36,
+ 		50,
+ 	}
 }
 
-local num_rows = 3
+local num_rows = 6
 local num_cols = 2
 
 -- HighScores handled as special cases for now until further refactoring
 local PaneItems = {
-	-- first row
-	{ name=THEME:GetString("RadarCategory","Taps"),  rc='RadarCategory_TapsAndHolds'},
-	{ name=THEME:GetString("RadarCategory","Mines"), rc='RadarCategory_Mines'},
-	-- { name=THEME:GetString("ScreenSelectMusic","NPS") },
+ 	-- all in one row now
+ 	{ name=THEME:GetString("RadarCategory","Taps"),  rc='RadarCategory_TapsAndHolds'},
+ 	{ name=THEME:GetString("RadarCategory","Holds"), rc='RadarCategory_Holds'},
+ 	{ name=THEME:GetString("RadarCategory","Rolls"), rc='RadarCategory_Rolls'},
+ 	{ name=THEME:GetString("RadarCategory","Jumps"), rc='RadarCategory_Jumps'},
+ 	{ name=THEME:GetString("RadarCategory","Hands"), rc='RadarCategory_Hands'},
+ 	{ name=THEME:GetString("RadarCategory","Mines"), rc='RadarCategory_Mines'},
 
-	-- second row
-	{ name=THEME:GetString("RadarCategory","Jumps"), rc='RadarCategory_Jumps'},
-	{ name=THEME:GetString("RadarCategory","Hands"), rc='RadarCategory_Hands'},
-	-- { name=THEME:GetString("RadarCategory","Lifts"), rc='RadarCategory_Lifts'},
 
-	-- third row
-	{ name=THEME:GetString("RadarCategory","Holds"), rc='RadarCategory_Holds'},
-	{ name=THEME:GetString("RadarCategory","Rolls"), rc='RadarCategory_Rolls'},
-	-- { name=THEME:GetString("RadarCategory","Fakes"), rc='RadarCategory_Fakes'},
-}
+ 	-- { name=THEME:GetString("RadarCategory","Fakes"), rc='RadarCategory_Fakes'},
+ 	-- { name=THEME:GetString("RadarCategory","Lifts"), rc='RadarCategory_Lifts'},
+ }
 
 -- -----------------------------------------------------------------------
 local af = Def.ActorFrame{ Name="PaneDisplayMaster" }
@@ -284,9 +289,9 @@ for player in ivalues(PlayerNumber) do
 		self:visible(GAMESTATE:IsHumanPlayer(player))
 
 		if player == PLAYER_1 then
-			self:x(_screen.w * 0.25 - 5)
+			self:x(_screen.w * 0.25 - 80)
 		elseif player == PLAYER_2 then
-			self:x(_screen.w * 0.75 + 5)
+			self:x(_screen.w * 0.75 + 80)
 		end
 
 		self:y(_screen.h - footer_height - pane_height)
@@ -322,8 +327,9 @@ for player in ivalues(PlayerNumber) do
 	af2[#af2+1] = Def.Quad{
 		Name="BackgroundQuad",
 		InitCommand=function(self)
-			self:zoomtowidth(_screen.w/2-10)
-			self:zoomtoheight(pane_height)
+			self:zoomtowidth(266)
+			self:zoomtoheight(pane_height*2)
+			self:addy(-pane_height)
 			self:vertalign(top)
 		end,
 		SetCommand=function(self)
@@ -345,8 +351,8 @@ for player in ivalues(PlayerNumber) do
 
 	for i, item in ipairs(PaneItems) do
 
-		local col = ((i-1)%num_cols) + 1
-		local row = math.floor((i-1)/num_cols) + 1
+		local col = 1
+ 		local row = math.floor((i-1)/1) + 1
 
 		af2[#af2+1] = Def.ActorFrame{
 
@@ -355,7 +361,7 @@ for player in ivalues(PlayerNumber) do
 			-- numerical value
 			LoadFont("Common Normal")..{
 				InitCommand=function(self)
-					self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
+					self:zoom(text_zoom):diffuse(Color.Black):horizalign(right):maxwidth(40)
 					self:x(pos.col[col])
 					self:y(pos.row[row])
 				end,
@@ -389,8 +395,8 @@ for player in ivalues(PlayerNumber) do
 	af2[#af2+1] = LoadFont("Common Normal")..{
 		Name="MachineHighScoreName",
 		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
-			self:x(pos.col[3]-50*text_zoom)
+			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(44)
+			self:x(pos.col[3]+25*text_zoom)
 			self:y(pos.row[1])
 		end,
 		SetCommand=function(self)
@@ -415,7 +421,7 @@ for player in ivalues(PlayerNumber) do
 		Name="MachineHighScore",
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-			self:x(pos.col[3]+25*text_zoom)
+			self:x(pos.col[3]+105*text_zoom)
 			self:y(pos.row[1])
 		end,
 		SetCommand=function(self)
@@ -443,7 +449,7 @@ for player in ivalues(PlayerNumber) do
 		Name="PlayerHighScoreName",
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
-			self:x(pos.col[3]-50*text_zoom)
+			self:x(pos.col[3]+25*text_zoom)
 			self:y(pos.row[2])
 		end,
 		SetCommand=function(self)
@@ -467,7 +473,7 @@ for player in ivalues(PlayerNumber) do
 		Name="PlayerHighScore",
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-			self:x(pos.col[3]+25*text_zoom)
+			self:x(pos.col[3]+105*text_zoom)
 			self:y(pos.row[2])
 		end,
 		SetCommand=function(self)
@@ -494,7 +500,7 @@ for player in ivalues(PlayerNumber) do
 		Text="Loading ... ",
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black)
-			self:x(pos.col[3]-15)
+			self:x(pos.col[3]+41)
 			self:y(pos.row[3])
 			self:visible(false)
 		end,
@@ -508,8 +514,8 @@ for player in ivalues(PlayerNumber) do
 	af2[#af2+1] = LoadFont("Wendy/_wendy small")..{
 		Name="DifficultyMeter",
 		InitCommand=function(self)
-			self:horizalign(right):diffuse(Color.Black)
-			self:xy(pos.col[4], pos.row[2])
+			self:horizalign(center):diffuse(Color.Black)
+			self:xy(pos.col[3]+41, pos.row[5]-7)
 			self:maxwidth(45)
 			self:queuecommand("Set")
 		end,
@@ -535,8 +541,8 @@ for player in ivalues(PlayerNumber) do
 			Name="Rival"..i.."Name",
 			InitCommand=function(self)
 				self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
-				self:x(pos.col[3]+50*text_zoom)
-				self:y(pos.row[i])
+				self:x(pos.col[3]+25*text_zoom)
+				self:y(pos.row[i+3])
 			end,
 			OnCommand=function(self)
 				self:visible(IsServiceAllowed(SL.GrooveStats.GetScores))
@@ -551,8 +557,8 @@ for player in ivalues(PlayerNumber) do
 			Name="Rival"..i.."Score",
 			InitCommand=function(self)
 				self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-				self:x(pos.col[3]+125*text_zoom)
-				self:y(pos.row[i])
+				self:x(pos.col[3]+105*text_zoom)
+				self:y(pos.row[i+3])
 			end,
 			OnCommand=function(self)
 				self:visible(IsServiceAllowed(SL.GrooveStats.GetScores))
