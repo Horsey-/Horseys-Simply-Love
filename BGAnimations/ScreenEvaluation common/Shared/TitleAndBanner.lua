@@ -12,7 +12,7 @@ local banner = {
 local y_offset = SL.Global.GameMode=="Casual" and 60.5 or 46
 
 
-local af = Def.ActorFrame{ InitCommand=function(self) self:xy(_screen.cx, y_offset):draworder(1) end }
+local af = Def.ActorFrame{ InitCommand=function(self) self:xy(_screen.cx, y_offset) end }
 
 if SongOrCourse and SongOrCourse:HasBanner() then
 	--song or course banner, if there is one
