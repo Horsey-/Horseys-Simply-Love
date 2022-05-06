@@ -25,8 +25,8 @@ return Def.ActorFrame{
 	 			self:zoomto(131,30)
 		 		self:x(51)
 			else
-				self:zoomto(140,30)
-				self:x(40.5)
+				self:zoomto(160,30)
+				self:x(46)
 			end
 			self:y( _screen.cy-71)
 			if player == PLAYER_1 then
