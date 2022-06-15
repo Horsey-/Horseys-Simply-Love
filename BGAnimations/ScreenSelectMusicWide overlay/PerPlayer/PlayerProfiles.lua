@@ -5,10 +5,12 @@ local profile_name = PROFILEMAN:GetProfile(player):GetDisplayName(player)
 local profile = PROFILEMAN:GetProfile(player)
 local avatar = GetPlayerAvatarPath(player)
 
-local quads = profile:GetTotalScoresWithGrade('Grade_Tier01')
-local tristars = profile:GetTotalScoresWithGrade('Grade_Tier02')
-local doublestars = profile:GetTotalScoresWithGrade('Grade_Tier03')
-local singlestars = profile:GetTotalScoresWithGrade('Grade_Tier04')
+local quads = profile.GetTotalScoresWithGrade and profile:GetTotalScoresWithGrade('Grade_Tier01') or -1
+local tristars = profile.GetTotalScoresWithGrade and profile:GetTotalScoresWithGrade('Grade_Tier02') or -1
+local doublestars = profile.GetTotalScoresWithGrade and profile:GetTotalScoresWithGrade('Grade_Tier03') or -1
+local singlestars = profile.GetTotalScoresWithGrade and profile:GetTotalScoresWithGrade('Grade_Tier04') or -1
+
+local noGetTotalScoresWithGrade = "OutFox Alpha 0.4.15 or newer required to display star counts (missing GetTotalScoresWithGrade() function)"
 
 local w = 268
 local h = 208
@@ -278,11 +280,13 @@ return Def.ActorFrame{
 
 	--Quads Value
 	LoadFont("Common Normal")..{
-			Text = "9999",
+			Text = "",
 			InitCommand = function(self)
 				self:horizalign(center)
 				self:xy(-25,32)
-				self:settext(commify(quads))
+				if quads >= 0 then
+					self:settext(commify(quads))
+				else end
 				self:zoom(0.7):maxwidth(40)
 			end,
 	},
@@ -298,11 +302,13 @@ return Def.ActorFrame{
 
 	--Tri Value
 	LoadFont("Common Normal")..{
-			Text = "9999",
+			Text = "",
 			InitCommand = function(self)
 				self:horizalign(center)
 				self:xy(18.5,32)
-				self:settext(commify(tristars))
+				if tristars >= 0 then
+					self:settext(commify(tristars))
+				else end
 				self:zoom(0.7)
 			end,
 	},
@@ -318,11 +324,13 @@ return Def.ActorFrame{
 
 	--Double Value
 	LoadFont("Common Normal")..{
-			Text = "9999",
+			Text = "",
 			InitCommand = function(self)
 				self:horizalign(center)
 				self:xy(62,32)
-				self:settext(commify(doublestars))
+				if doublestars >= 0 then
+					self:settext(commify(doublestars))
+				else end
 				self:zoom(0.7)
 			end,
 	},
@@ -338,12 +346,29 @@ return Def.ActorFrame{
 
 	--Single Value
 	LoadFont("Common Normal")..{
-			Text = "9999",
+			Text = "",
 			InitCommand = function(self)
 				self:horizalign(center)
 				self:xy(105,32)
-				self:settext(commify(singlestars))
+				if singlestars >= 0 then
+					self:settext(commify(singlestars))
+				else end
 				self:zoom(0.7)
+			end,
+	},
+
+	--error message displayed to users if GetTotalScoresWithGrade() function isn't available
+	LoadFont("Common Normal")..{
+			Text = "",
+			InitCommand = function(self)
+				self:horizalign(center)
+				self:xy(42,33)
+				self:zoom(0.5)
+				self:wrapwidthpixels(350)
+				self:vertspacing(-5)
+				if quads < 0 then
+					self:settext(noGetTotalScoresWithGrade)
+				else end
 			end,
 	},
 
