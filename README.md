@@ -4,7 +4,9 @@
 
 ## IMPORTANT, WARNING, READ ME!:
 
-This theme currently only works on Outfox Alpha 4 LTS and above. This version of Outfox has not been released to the public yet. When it has been released, a download link will be provided below. If you would like to use this theme on any other version of SM5/Outfox, you will need to contact me. 
+This theme currently only works on OutFox Alpha 4.15 and above (0.4.15). The latest version of Outfox can be downloaded from the link below. If you would like to use this theme on any other version of SM5/OutFox, you will need to comment out the instances of GetTotalScoresWithGrade(). 
+
+[Click here to visit the OutFox blog](https://projectoutfox.com)
 
 ## 🤠About This Fork🐴
 
@@ -31,7 +33,7 @@ New options can be found in Simply Love Options (the operator menu)
 Change Score Vocalization in Advanced Options (after selecting a song)
 
 ![Screen Shot 2022-05-23 at 5 55 44 PM](https://user-images.githubusercontent.com/5679966/169927408-13416f01-9011-48ea-87a4-c17f2db24214.png)
- 
+
 ✅ Expand Personal Highscore name to 9 characters (configurable in Simply Love Options)
 
 ✅ Verbose Song Folder: Display "Song Folder" or "Group" On SelectMusic and Evaluation
@@ -44,17 +46,17 @@ SongDescription on ScreenSelectMusic and TitleAndBanner on ScreenEvaluation have
 
 <details>
   <summary>Click to expand for details ⬇️</summary>
- 
+
 This is configurable in Simply Love Options. When a song group (pack) has a banner, but a song does not have a banner, the song group (pack) banner will be shown. When there is no group (pack) banner, and a song does not have a banner, the default banner will be shown. The default is to show the group banner when no banner is present.
 
  </details>
- 
+
  ## New Features And Tweaks
- 
+
  ✅ Re-added vocalize score support (The selected voice will read out your score when arriving in Evaluation)
 <details>
   <summary>Click to expand for details ⬇️</summary>
- 
+
 You'll need to download the old vocalize pack [here](http://www.mediafire.com/file/i8osxoy3h2ikdbj/Vocalize.zip/file) and place it in ~/Other/
 
  If you placed the Vocalize pack correctly, the option to select a vocalization will appear in the "Advanced Options" page in Player Options, all the way at the bottom.
@@ -67,38 +69,38 @@ You'll need to download the old vocalize pack [here](http://www.mediafire.com/fi
 ✅ Slightly redesigned ScreenEvaluation to clean up "floating" BitmapText:
 <details>
   <summary>Click to expand for details ⬇️</summary>
- 
+
   - Difficulty number is now in the coloured box along with the difficulty name (beginner, expert, etc).
- 
+
   - Style (single/double) string was removed from the evaluation screen because it's redundant information when there is a graphical representation of style in the top right of the screen.
- 
+
   - Song credit information is now in a quad that is the same colour as the difficulty box but darkened (ligher colour in rainbow mode). The difficulty box was also widened from a square to a rectangle to better fit the difficulty name text.
- 
+
   </details>
 ✅ New Features Enabled By ScreenSelectMusicWide
 
 <details>
   <summary>Click to expand for details ⬇️</summary>
-Completely reworked ScreenSelectMusic; this screen is no longer very lopsided in appearance with the song wheel on the right side and player elements squished on the left side. The main goal of the rework was to put all of the P1 assets on the left and P2 assets on the right. 
+Completely reworked ScreenSelectMusic; this screen is no longer very lopsided in appearance with the song wheel on the right side and player elements squished on the left side. The main goal of the rework was to put all of the P1 assets on the left and P2 assets on the right.
 
  - ScreenSelectMusicWide is now visually balanced
- 
+
  - There is a huge amount of real estate opened up for new features on this screen.
- 
+
  - There is absolutely no second guessing which information pertains to which player.
- 
+
  - Intuitively, song difficulty increases from left to right.
 
  In a future commit, I would like to change the I/O buttons for this screen making MenuLeft/PadLeft and MenuRight/PadRight select difficulty (without needing to double tap), and MenuUp and MenuDown scroll through the SongWheel.
   </details>
- ✅ Show a profile card for players with a local profile 
+ ✅ Show a profile card for players with a local profile
 
 <details>
   <summary>Click to expand for details ⬇️</summary>
- 
+
  A profile card replaces the player name and avatar in the footer of ScreenSelectMusicWide and ScreenEvaluation. The profile card shows how many quads, tri-stars, duo-stars, and single-stars a player has achieved across ALL gametypes and difficulties along with a number of cool profile stats. Guest profiles (no profile) do not have a corresponding profile card. Make sure you make a local profile for yourself (or set up USB profiles) to get the most out of this theme.
- 
+
 - GetTotalScoresWithGrade() is a new function in Outfox Alpha 4 LTS that makes profile star counts possible; previously, GetTotalStepsWithTopGrade() was used, but it is incredibly inefficient and would cause Stepmania to hang the more songs were loaded. The popular Waterfall theme gets around this by creating its own separate highscores tables which are more efficient to parse by the engine.
- 
-- USB profiles are untested because I don't use them but probably work just fine. 
+
+- USB profiles are untested because I don't use them but probably work just fine.
    </details>

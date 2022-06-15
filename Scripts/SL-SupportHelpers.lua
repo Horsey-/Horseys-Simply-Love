@@ -83,9 +83,11 @@ StepManiaVersionIsSupported = function()
 	-- SM5.1.x is supported
 	-- SM5.2 is not supported because it saw significant
 	--       backwards-incompatible API changes and is now abandoned
-	if IsStepMania() then
-		return IsProductVersion(5, 0, 12) or IsProductVersion(5, 1)
-	end
+
+	--stepmania is not supported because it does not have the function GetTotalScoresWithGrade()
+	-- if IsStepMania() then
+	-- 	return IsProductVersion(5, 0, 12) or IsProductVersion(5, 1)
+	-- end
 
 	-- OutFox >= 0.4 is supported (beta status because it's not open source yet)
 	if IsOutFox() then
