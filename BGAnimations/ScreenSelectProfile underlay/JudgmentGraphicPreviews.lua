@@ -15,7 +15,7 @@ for profile in ivalues(args.profile_data) do
 					Name="JudgmentGraphic_"..name,
 					Texture=path,
 					InitCommand=function(self)
-						self:y(-50):animate(false)
+						self:y(-50):animate(true)
 					end
 				}
 
