@@ -236,6 +236,15 @@ SL_CustomPrefs.Get = function()
 			Values  = { 0, 1, 2 }
 		},
 		-- - - - - - - - - - - - - - - - - - - -
+		-- Verbose Song VerboseSongFolder
+		-- true = song folder, false = only group name
+		VerboseSongFolder = {
+			Default = false,
+			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
+			Values 	= { true , false }
+		},
+
+		-- - - - - - - - - - - - - - - - - - - -
 		LastActiveEvent =
 		{
 			Default = "",
