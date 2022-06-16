@@ -5,7 +5,7 @@ for judgment_filename in ivalues( GetJudgmentGraphics() ) do
 		t[#t+1] = LoadActor( THEME:GetPathG("", "_judgments/" .. judgment_filename) )..{
 			Name="JudgmentGraphic_"..StripSpriteHints(judgment_filename),
 			InitCommand=function(self)
-				self:visible(false):animate(false)
+				self:visible(false):animate(true)
 				local num_frames = self:GetNumStates()
 
 				for i,window in ipairs(SL.Global.ActiveModifiers.TimingWindows) do
