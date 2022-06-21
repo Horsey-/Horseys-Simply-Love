@@ -42,7 +42,7 @@ local function CreditsText( player )
 						textColor = color(SL.SRPG6.TextColor)
 						shadowLength = 0.4
 					end
-				elseif (screen:GetName() == "ScreenEvaluationStage") or (screen:GetName() == "ScreenEvaluationNonstop") then
+				elseif (screen:GetName() == "ScreenEvaluationStage") and not IsUsingWideScreen() or (screen:GetName() == "ScreenEvaluationNonstop") then
 					-- ignore ShowCreditDisplay metric for ScreenEval
 					-- only show this BitmapText actor on Evaluation if the player is joined
 					bShow = GAMESTATE:IsHumanPlayer(player)
@@ -54,6 +54,9 @@ local function CreditsText( player )
 					if ThemePrefs.Get("RainbowMode") then
 						textColor = Color.Black
 					end
+				--we don't want player name to be shown on ScreenEvaluation in WideScreen because that information will be shown in the profile card
+				elseif (screen:GetName() == "ScreenEvaluationStage") and IsUsingWideScreen() or (screen:GetName() == "ScreenSelectMusicWide") then
+					bShow = false
 				end
 			end
 
@@ -97,7 +100,12 @@ for player in ivalues(PlayerNumber) do
 			local screen = SCREENMAN:GetTopScreen()
 			if screen then
 				if THEME:HasMetric(screen:GetName(), "ShowPlayerAvatar") then
-					self:visible( THEME:GetMetric(screen:GetName(), "ShowPlayerAvatar") )
+					--we don't want avatars to show in WideScreen Evalation because only WideScreen will have access to the space to fit a profile card
+					if  screen:GetName() == "ScreenEvaluationStage" and IsUsingWideScreen() then
+						self:visible( THEME:GetMetric(screen:GetName(), "ShowCreditDisplay") )
+					else
+						self:visible( THEME:GetMetric(screen:GetName(), "ShowPlayerAvatar") )
+					end
 				else
 					self:visible( THEME:GetMetric(screen:GetName(), "ShowCreditDisplay") )
 				end

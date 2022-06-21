@@ -8,6 +8,8 @@ for player in ivalues( PlayerNumber ) do
 	t[#t+1] = LoadActor("./DensityGraph.lua", player)
 	-- AuthorCredit, Description, and ChartName associated with the current stepchart
 	t[#t+1] = LoadActor("./StepArtist.lua", player)
+
+	t[#t+1] = LoadActor("./PlayerProfiles.lua", player)
 end
 
 return t
