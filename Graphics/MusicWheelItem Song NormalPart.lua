@@ -10,8 +10,12 @@ af[#af+1] = Def.Sprite{
 	Texture=THEME:GetPathG("", "Has Edit (doubleres).png"),
 	InitCommand=function(self)
 		self:horizalign(left):visible(false):zoom(0.375)
-		self:visible(false):x(-30.5):zoom(0.375)
-		
+		if IsUsingWideScreen() then
+ 			self:x(_screen.w/2.125 - self:GetWidth()*self:GetZoom() )
+ 		else
+ 			self:visible(false):x(-30.5):zoom(0.375)
+ 		end
+
 		-- if DarkUI() then self:diffuse(0,0,0,1) end
 	end,
 	SetCommand=function(self, params)
