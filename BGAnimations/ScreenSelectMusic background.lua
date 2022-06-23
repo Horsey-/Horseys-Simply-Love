@@ -1,4 +1,4 @@
-if not ThemePrefs.Get("RainbowMode") and ThemePrefs.Get("VisualStyle") ~= "SRPG6" then return Def.ActorFrame{ LoadActor(THEME:GetPathB("","_shared background")) } end
+if not ThemePrefs.Get("RainbowMode") and ThemePrefs.Get("VisualStyle") ~= "SRPG6" then return LoadActor( THEME:GetPathB("", "_shared background") ) end
 
 return Def.ActorFrame{
 	Def.Quad{
