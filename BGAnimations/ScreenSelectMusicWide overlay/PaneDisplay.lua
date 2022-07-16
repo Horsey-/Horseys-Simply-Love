@@ -3,7 +3,7 @@ local machine_profile = PROFILEMAN:GetMachineProfile()
 
 -- the height of the footer is defined in ./Graphics/_footer.lua, but we'll
 -- use it here when calculating where to position the PaneDisplay
-local footer_height = 32
+local footer_height = GAMESTATE:GetNumPlayersEnabled() == 2 and 0 or 32
 
 -- height of the PaneDisplay in pixels
 local pane_height = 60
@@ -297,15 +297,17 @@ for player in ivalues(PlayerNumber) do
 		self:y(_screen.h - footer_height - pane_height)
 	end
 
-	af2.PlayerJoinedMessageCommand=function(self, params)
-		if player==params.Player then
-			-- ensure BackgroundQuad is colored before it is made visible
-			self:GetChild("BackgroundQuad"):playcommand("Set")
-			self:visible(true)
-				:zoom(0):croptop(0):bounceend(0.3):zoom(1)
-				:playcommand("Update")
-		end
-	end
+	--since we're now resetting ScreenSelectMusicWide when a new player joins, we don't want this animation to play
+	-- af2.PlayerJoinedMessageCommand=function(self, params)
+	-- 	if player==params.Player then
+	-- 		-- ensure BackgroundQuad is colored before it is made visible
+	-- 		self:GetChild("BackgroundQuad"):playcommand("Set")
+	-- 		self:visible(true)
+	-- 			:zoom(0):croptop(0):bounceend(0.3):zoom(1)
+	-- 			:playcommand("Update")
+	-- 	end
+	-- end
+	
 	-- player unjoining is not currently possible in SL, but maybe someday
 	af2.PlayerUnjoinedMessageCommand=function(self, params)
 		if player==params.Player then
