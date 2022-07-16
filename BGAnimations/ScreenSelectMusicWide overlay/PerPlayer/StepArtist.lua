@@ -13,11 +13,12 @@ return Def.ActorFrame{
 	CurrentSongChangedMessageCommand=function(self) self:queuecommand("Reset") end,
 	CurrentCourseChangedMessageCommand=function(self) self:queuecommand("Reset") end,
 
-	PlayerJoinedMessageCommand=function(self, params)
-		if params.Player == player then
-			self:queuecommand("Appear" .. pn)
-		end
-	end,
+	--since we're now resetting ScreenSelectMusicWide when a new player joins, we don't want this animation to play
+	-- PlayerJoinedMessageCommand=function(self, params)
+	-- 	if params.Player == player then
+	-- 		self:queuecommand("Appear" .. pn)
+	-- 	end
+	-- end,
 
 	-- Simply Love doesn't support player unjoining (that I'm aware of!) but this
 	-- animation is left here as a reminder to a future me to maybe look into it.
@@ -33,7 +34,11 @@ return Def.ActorFrame{
 
 	InitCommand=function(self)
 		self:visible( false ):halign( p )
-		self:y(_screen.cy + 12.5)
+		if GAMESTATE:GetNumPlayersEnabled() == 2 then
+			self:y(_screen.cy + 77.5)
+		else
+			self:y(_screen.cy + 12.5)
+		end
 
 		if player == PLAYER_1 then
 			self:x( _screen.cx - 427.5)
@@ -50,7 +55,11 @@ return Def.ActorFrame{
 	-- colored background
 	Def.ActorFrame{
 		InitCommand=function(self)
-			self:y(4)
+			if GAMESTATE:GetNumPlayersEnabled() == 2 then
+				self:y(0)
+			else
+				self:y(4)
+			end
 			if player == PLAYER_1 then
 				self:x(107)
 			elseif player == PLAYER_2 then
@@ -66,13 +75,13 @@ return Def.ActorFrame{
 				--change 422 for length, -17 changes the height, and +18 moves the "carrot" to under "STEPS"
 				local verts = {
 					--   x   y  z    r,g,b,a
-					{{-113, -32, 0}, {1,1,1,1}},
-					{{ _screen.w/2.0285, -32, 0}, {1,1,1,1}},
+					{{-113, GAMESTATE:GetNumPlayersEnabled() == 2 and -15 or -32, 0}, {1,1,1,1}},
+					{{ _screen.w/2.0285, GAMESTATE:GetNumPlayersEnabled() == 2 and -15 or -32, 0}, {1,1,1,1}},
 					{{ _screen.w/2.0285, 16, 0}, {1,1,1,1}},
 
 					{{ _screen.w/2.0285, 16, 0}, {1,1,1,1}},
 					{{-113, 16, 0}, {1,1,1,1}},
-					{{-113, -32, 0}, {1,1,1,1}},
+					{{-113, GAMESTATE:GetNumPlayersEnabled() == 2 and -15 or -32, 0}, {1,1,1,1}},
 
 					{{ -80, 16, 0}, {1,1,1,1}},
 					{{ -60, 16, 0}, {1,1,1,1}},
@@ -102,6 +111,9 @@ return Def.ActorFrame{
 		OnCommand=function(self)
  			self:diffuse(0,0,0,1)
  			self:maxwidth(40)
+			if GAMESTATE:GetNumPlayersEnabled() == 2 then
+				self:zoom(0.65)
+			else end
  			if player == PLAYER_1 then
  				self:horizalign(left)
  				self:x(3)
@@ -119,12 +131,25 @@ return Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		InitCommand=function(self)
 			self:diffuse(color("#1e282f"))
- 			self:maxwidth(217)
+			if GAMESTATE:GetNumPlayersEnabled() == 2 then
+				self:zoom(0.65)
+				self:maxwidth(359)
+			else
+ 				self:maxwidth(217)
+			end
  				if player == PLAYER_1 then
-					self:x(46)
+					if GAMESTATE:GetNumPlayersEnabled() == 2 then
+						self:x(31)
+					else
+						self:x(46)
+					end
  					self:horizalign(left)
 				elseif player == PLAYER_2 then
-					self:x(126)
+					if GAMESTATE:GetNumPlayersEnabled() == 2 then
+						self:x(141)
+					else
+						self:x(126)
+					end
  					self:horizalign(right)
  				end
 		end,
