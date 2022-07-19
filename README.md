@@ -16,7 +16,7 @@ The new features and design paradigms that exist in this fork are listed below:
 
 ## ScreenSelectMusic and ScreenEvaluation redesign
 
-The most drastic change in this fork is the rework of ScreenSelectMusic. The screen was completely overhauled to have a different UI (and screen) depending on the aspect ratio selected in system options. In the interest of saving space, many new features will not be supported in 4:3 aspect ratio because there simply is not enough space onscreen with older displays. This theme fully utilizes the alotted space in 16:9. It is *highly recommended* to use this theme in 16:9 aspect ratio. When you select 16:9, instead of going to ScreenSelectMusic, you'll be automatically directed to a new screen called ScreenSelectMusicWide which was created to keep the 16:9 and 4:3 aspect ratio environments completely separate from each other.
+The most drastic change in this fork is the rework of ScreenSelectMusic. The screen was completely overhauled to have a different UI (and screen) depending on the aspect ratio selected in system options. In the interest of saving space, many new features will not be supported in 4:3 aspect ratio because there simply is not enough space onscreen with older displays. This theme fully utilizes the allotted space in 16:9. It is *highly recommended* to use this theme in 16:9 aspect ratio. When you select 16:9, instead of going to ScreenSelectMusic, you'll be automatically directed to a new screen called ScreenSelectMusicWide which was created to keep the 16:9 and 4:3 aspect ratio environments completely separate from each other.
 
 
 The screenshots below showcase the redesigned screens:
@@ -57,7 +57,7 @@ This is configurable in Simply Love Options. When a song group (pack) has a bann
 <details>
   <summary>Click to expand for details ⬇️</summary>
 
-You'll need to download the old vocalize pack [here](http://www.mediafire.com/file/i8osxoy3h2ikdbj/Vocalize.zip/file) and place it in ~/Other/
+You'll need to download the old vocalize pack [here](https://www.mediafire.com/file/5r4lvn6gb1ghwhk/Simply_Love_Vocalize.zip/file) and place it in ~/Other/
 
  If you placed the Vocalize pack correctly, the option to select a vocalization will appear in the "Advanced Options" page in Player Options, all the way at the bottom.
  </details>
