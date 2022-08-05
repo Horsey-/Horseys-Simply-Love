@@ -36,13 +36,6 @@ local SharedBackground = {
 	["ScreenThemeOptions"] = true,
 }
 
-local StaticBackgroundVideos = {
-	["Unaffiliated"] = THEME:GetPathG("", "_VisualStyles/SRPG6/Fog.mp4"),
-	["Democratic People's Republic of Timing"] = THEME:GetPathG("", "_VisualStyles/SRPG6/Ranni.mp4"),
-	["Footspeed Empire"] = THEME:GetPathG("", "_VisualStyles/SRPG6/Malenia.mp4"),
-	["Stamina Nation"] = THEME:GetPathG("", "_VisualStyles/SRPG6/Melina.mp4"),
-}
-
 local shared_alpha = 0.6
 local static_alpha = 1
 
@@ -63,19 +56,21 @@ local af = Def.ActorFrame {
 			local static = self:GetChild("Static")
 			local video = self:GetChild("Video")
 			if SharedBackground[screen:GetName()] and not self.IsShared then
+				self:RemoveChild("Video")
 				static:visible(true)
-				video:Load(THEME:GetPathG("", "_VisualStyles/SRPG6/Fog.mp4"))
-				video:rotationx(180):blend("BlendMode_Add"):diffusealpha(shared_alpha):diffuse(color("#ffffff"))
+				self:AddChildFromPath( THEME:GetPathB("_shared","background/FogVideo.lua" ) )
+				-- video:Load(THEME:GetPathG("", "_VisualStyles/SRPG6/Fog.mp4"))
+				-- video:rotationx(180):blend("BlendMode_Add"):diffusealpha(shared_alpha):diffuse(color("#ffffff"))
 				self.IsShared = true
 			end
 			if not SharedBackground[screen:GetName()] and self.IsShared then
-				local faction = SL.SRPG6.GetFactionName(SL.Global.ActiveColorIndex)
 				-- No need to change anything for Unaffiliated.
 				-- We want to keep using the SharedBackground.
+				static:visible(false)
 				if faction ~= "Unaffiliated" then
-					static:visible(false)
-					video:Load(StaticBackgroundVideos[faction])
-					video:rotationx(0):blend("BlendMode_Normal"):diffusealpha(static_alpha):diffuse(GetCurrentColor(true))
+					self:RemoveChild("Video")
+					-- Load the new faction video to memory.
+					self:AddChildFromPath( THEME:GetPathB("_shared","background/FactionVideo.lua" ) )
 					self.IsShared = false
 				end
 			end
@@ -83,10 +78,11 @@ local af = Def.ActorFrame {
 	end,
 	VisualStyleSelectedMessageCommand=function(self)
 		local style = ThemePrefs.Get("VisualStyle")
-		if style == "SRPG6" then
-			self:visible(true)
+		if style ~= "SRPG6" then
+			-- Clean up the actorframe's video children from memory.
+			self:RemoveChild("Video")
 		else
-			self:visible(false)
+			self:AddChildFromPath( THEME:GetPathB("_shared","background/FogVideo.lua" ) )
 		end
 	end,
 	Def.Sprite {
