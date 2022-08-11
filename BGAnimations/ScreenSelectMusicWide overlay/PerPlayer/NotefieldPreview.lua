@@ -47,6 +47,7 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
             YReverseOffsetPixels = ReceptorOffset,
             FieldID=-1,
             OnCommand=function(self)
+                self:ChangeReload( GAMESTATE:GetCurrentSteps(pnNoteField) )
                 self:y(NotefieldY):GetPlayerOptions("ModsLevel_Current"):StealthPastReceptors(true, true)
                 self:AutoPlay(true)
 
