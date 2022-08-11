@@ -38,11 +38,6 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
             :zoom(SCREEN_HEIGHT / 480):visible(true)
         end,
 
-        -- Def.Quad{
-        --     InitCommand=function(self) self:zoomto(100,100) end
-        --
-        -- },
-
         Def.NoteField {
             Name = "NotefieldPreview",
             Player = pnNoteField,
@@ -55,9 +50,9 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
                 self:y(NotefieldY):GetPlayerOptions("ModsLevel_Current"):StealthPastReceptors(true, true)
                 self:AutoPlay(true)
 
-                -- LoadModule("Player.SetSpeed.lua")(pn)
-                -- local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
-                -- self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray)
+                LoadModule("Player.SetSpeed.lua")(pn)
+                local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
+                self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray)
             end,
 
             CurrentStepsP1ChangedMessageCommand=function(self) self:playcommand("Refresh") end,
@@ -71,9 +66,9 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
                 local Song = GAMESTATE:GetCurrentSong()
                 if Song then ChartArray = Song:GetAllSteps() else return end
 
-                -- LoadModule("Player.SetSpeed.lua")(pn)
-                -- local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
-                -- self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray)
+                LoadModule("Player.SetSpeed.lua")(pn)
+                local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
+                self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray)
 
                 local ChartIndex = GetCurrentChartIndex(pnNoteField, ChartArray)
                 if not ChartIndex then return end
