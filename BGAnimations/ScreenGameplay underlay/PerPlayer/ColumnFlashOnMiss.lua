@@ -10,7 +10,7 @@ if mods.ColumnFlashOnMiss then
 	-- Manually try and account for it ourselves here.
 	local flip = po:Flip() > 0
 	local invert = po:Invert() > 0
-	
+
 	if flip and invert then return end
 
 	local NumColumns = GAMESTATE:GetCurrentStyle():ColumnsPerPlayer()
@@ -22,7 +22,7 @@ if mods.ColumnFlashOnMiss then
 	if flip then
 		column_mapping = {column_mapping[4], column_mapping[3], column_mapping[2], column_mapping[1]}
 	end
-	
+
 	if invert then
 		column_mapping = {column_mapping[2], column_mapping[1], column_mapping[4], column_mapping[3]}
 	end
@@ -65,6 +65,12 @@ if mods.ColumnFlashOnMiss then
 					if tns == "Miss" or tns == "MissedHold" then
 						columns[column_mapping[i]]:playcommand("Flash")
 					end
+          if tns == "W5" then
+            columns[column_mapping[i]]:playcommand("Flash2")
+          end
+          if tns == "W4" then
+            columns[column_mapping[i]]:playcommand("Flash3")
+         	end
 				end
 			end
 		end
@@ -82,9 +88,17 @@ if mods.ColumnFlashOnMiss then
 					:fadebottom(0.333)
 	        end,
 			FlashCommand=function(self)
-				self:diffuse(1,0,0,0.66)
+				self:diffuse(SL.JudgmentColors[SL.Global.GameMode][6]):diffusealpha(0.66)
 					:accelerate(0.165):diffuse(0,0,0,0)
-			end
+			end,
+		  Flash2Command=function(self)
+        self:diffuse(SL.JudgmentColors[SL.Global.GameMode][5]):diffusealpha(0.66)
+          :accelerate(0.165):diffuse(0,0,0,0)
+      end,
+			Flash3Command=function(self)
+				self:diffuse(SL.JudgmentColors[SL.Global.GameMode][4]):diffusealpha(0.66)
+					:accelerate(0.165):diffuse(0,0,0,0)
+			end,
 		}
 	end
 
