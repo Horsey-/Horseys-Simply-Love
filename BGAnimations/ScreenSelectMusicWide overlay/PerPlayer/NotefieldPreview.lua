@@ -26,6 +26,14 @@ end
 
 local t = Def.ActorFrame {}
 
+
+-- to do:
+
+--changing mini percent moves the notefield up and down
+--account for reverse direction with both players joined (swap the elements onscreen)
+--Down+Left (on dance pad) to increase speed mod
+--figure out why P2 profile is problematic for loading
+
 for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
     -- To avoid crashes with player 2
     local pnNoteField = PlayerNumber:Reverse()[pn]
@@ -34,14 +42,29 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
         Name="Player" .. ToEnumShortString(pn),
         FOV=45,
         InitCommand=function(self)
-            self:xy(_screen.cx+293, _screen.cy-14)
-            :zoom(SCREEN_HEIGHT / 480):visible(true)
+            -- self:xy(_screen.cx+293, _screen.cy-14)
+            -- :zoom(SCREEN_HEIGHT / 480):visible(true)
+            if pnNoteField == 0 then
+              self:x(_screen.cx+293)
+            elseif pnNoteField == 1 then
+              self:x(_screen.cx-293)
+            end
+
+            self:y(_screen.cy-14)
+
+            if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
+              self:zoom(SCREEN_HEIGHT / 1080)
+            else
+              self:zoom(SCREEN_HEIGHT / 480)
+            end
+            self:visible(true)
         end,
 
         Def.NoteField {
             Name = "NotefieldPreview",
             Player = pnNoteField,
             NoteSkin = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptions('ModsLevel_Preferred'):NoteSkin(),
+            -- Chart = "Hard",
             DrawDistanceAfterTargetsPixels = NotefieldRenderAfter,
             DrawDistanceBeforeTargetsPixels = NotefieldRenderBefore,
             YReverseOffsetPixels = ReceptorOffset,
@@ -58,6 +81,7 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 
             CurrentStepsP1ChangedMessageCommand=function(self) self:playcommand("Refresh") end,
             CurrentStepsP2ChangedMessageCommand=function(self) self:playcommand("Refresh") end,
+            --we don't need to use a messagecommand to refresh when switching from Single to Double style because the whole screen refreshes anyway
             OptionsListStartMessageCommand=function(self) self:playcommand("Refresh") end,
 
             RefreshCommand=function(self)
