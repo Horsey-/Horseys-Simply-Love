@@ -82,8 +82,8 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
                 self:ChangeReload( GAMESTATE:GetCurrentSteps(pnNoteField) )
                 self:y(NotefieldY):GetPlayerOptions("ModsLevel_Current"):StealthPastReceptors(true, true)
                 self:AutoPlay(true)
-
-                LoadModule("Player.SetSpeed.lua")(pn)
+                --don't need to load this module for player note velocities to show up...? Disabling this module makes the arrows appear with their correct velocity based on the current speed mod selected by the player
+                -- LoadModule("Player.SetSpeed.lua")(pn)
                 local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
                 --force Mini% to 0 here because it throws off the notefield positioning; this notefield is meant to be a preview of the steps in the space allowed, not a complete 1:1 recreation of what the player will see on ScreenGameplay
                 self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray):Mini(0)
@@ -100,8 +100,8 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 
                 local Song = GAMESTATE:GetCurrentSong()
                 if Song then ChartArray = Song:GetAllSteps() else return end
-
-                LoadModule("Player.SetSpeed.lua")(pn)
+                --don't need to load this module for player note velocities to show up...? Disabling this module makes the arrows appear with their correct velocity based on the current speed mod selected by the player
+                -- LoadModule("Player.SetSpeed.lua")(pn)
                 local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
                 --force Mini% to 0 here because it throws off the notefield positioning; this notefield is meant to be a preview of the steps in the space allowed, not a complete 1:1 recreation of what the player will see on ScreenGameplay
                 self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray):Mini(0)
