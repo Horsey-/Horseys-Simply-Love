@@ -1,6 +1,6 @@
 -- Majority of code borrowed from Mr. ThatKid and Sudospective
 
-local NotefieldRenderBefore = 300 --THEME:GetMetric("Player","DrawDistanceBeforeTargetsPixels")
+local NotefieldRenderBefore = 390 --THEME:GetMetric("Player","DrawDistanceBeforeTargetsPixels")
 local NotefieldRenderAfter = 0 --THEME:GetMetric("Player","DrawDistanceAfterTargetsPixels")
 local ReceptorPosNormal = THEME:GetMetric("Player","ReceptorArrowsYStandard")
 local ReceptorPosReverse = THEME:GetMetric("Player","ReceptorArrowsYReverse")
@@ -29,7 +29,6 @@ local t = Def.ActorFrame {}
 
 -- to do:
 
---changing mini percent moves the notefield up and down
 --account for reverse direction with both players joined (swap the elements onscreen)
 --Down+Left (on dance pad) to increase speed mod
 --figure out why P2 profile is problematic for loading
@@ -50,7 +49,7 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
               self:x(_screen.cx-293)
             end
 
-            self:y(_screen.cy-14)
+            self:y(_screen.cy-44)
 
             if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
               self:zoom(SCREEN_HEIGHT / 1080)
@@ -59,6 +58,16 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
             end
             self:visible(true)
         end,
+
+        LoadFont("Common Normal")..{
+            InitCommand=function(self)
+              local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
+
+              self:settext(PlayerModsArray)
+              -- self:settext(gsub("(,).*?(Mini,)",",",PlayerModsArray))
+              self:maxwidth(200)
+            end,
+        },
 
         Def.NoteField {
             Name = "NotefieldPreview",
@@ -76,7 +85,8 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 
                 LoadModule("Player.SetSpeed.lua")(pn)
                 local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
-                self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray)
+                --force Mini% to 0 here because it throws off the notefield positioning; this notefield is meant to be a preview of the steps in the space allowed, not a complete 1:1 recreation of what the player will see on ScreenGameplay
+                self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray):Mini(0)
             end,
 
             CurrentStepsP1ChangedMessageCommand=function(self) self:playcommand("Refresh") end,
@@ -93,7 +103,8 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 
                 LoadModule("Player.SetSpeed.lua")(pn)
                 local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
-                self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray)
+                --force Mini% to 0 here because it throws off the notefield positioning; this notefield is meant to be a preview of the steps in the space allowed, not a complete 1:1 recreation of what the player will see on ScreenGameplay
+                self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray):Mini(0)
 
                 local ChartIndex = GetCurrentChartIndex(pnNoteField, ChartArray)
                 if not ChartIndex then return end
