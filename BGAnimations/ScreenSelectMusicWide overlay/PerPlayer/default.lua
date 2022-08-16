@@ -9,8 +9,8 @@ for player in ivalues( PlayerNumber ) do
 	t[#t+1] = LoadActor("./StepArtist.lua", player)
 
 	t[#t+1] = LoadActor("./PlayerProfiles.lua", player)
-
-	t[#t+1] = LoadActor("./NotefieldPreview.lua", player)
 end
+
+t[#t+1] = LoadActor("./NotefieldPreview.lua")
 
 return t
