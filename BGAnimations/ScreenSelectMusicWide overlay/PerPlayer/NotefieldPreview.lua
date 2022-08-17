@@ -64,7 +64,6 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
               local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
 
               self:settext(PlayerModsArray)
-              -- self:settext(gsub("(,).*?(Mini,)",",",PlayerModsArray))
               self:maxwidth(200)
             end,
         },
