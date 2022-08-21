@@ -13,6 +13,13 @@ local af = Def.ActorFrame{
 		songOptions:MusicRate(SL.Global.ActiveModifiers.MusicRate)
 	end,
 
+	--Joining a new player to ScreenSelectMusicWide is going to be janky because the best way to go about it would be to fade out the first joined player's UI
+	--We'll have to then deal with the performance hit associated with having the UI be duplicated but not visible (because hidden elements are still loaded?)
+	--The best option, I think, is to reload the screen entirely
+	PlayerJoinedMessageCommand=function(self)
+		SCREENMAN:GetTopScreen():SetNextScreenName("ScreenSelectMusicWide"):StartTransitioningScreen("SM_GoToNextScreen")
+	end,
+
 	-- ---------------------------------------------------
 	--  first, load files that contain no visual elements, just code that needs to run
 

@@ -2,8 +2,8 @@
 
 local NotefieldRenderBefore = 390 --THEME:GetMetric("Player","DrawDistanceBeforeTargetsPixels")
 local NotefieldRenderAfter = 0 --THEME:GetMetric("Player","DrawDistanceAfterTargetsPixels")
-local ReceptorPosNormal = THEME:GetMetric("Player","ReceptorArrowsYStandard")
-local ReceptorPosReverse = THEME:GetMetric("Player","ReceptorArrowsYReverse")
+local ReceptorPosNormal = _screen.cy-170
+local ReceptorPosReverse = _screen.cy+170
 local ReceptorOffset = ReceptorPosReverse - ReceptorPosNormal
 local NotefieldY = (ReceptorPosNormal + ReceptorPosReverse) / 2
 
@@ -48,8 +48,6 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
             elseif pnNoteField == 1 then
               self:x(_screen.cx-293)
             end
-
-            self:y(_screen.cy-44)
 
             if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
               self:zoom(SCREEN_HEIGHT / 1080)

@@ -18,11 +18,12 @@ local af = Def.ActorFrame{
 			self:x(_screen.cx+293)
 		end
 	end,
-	PlayerJoinedMessageCommand=function(self, params)
-		if params.Player == player then
-			self:visible(true)
-		end
-	end,
+	--since we're now resetting ScreenSelectMusicWide when a new player joins, we don't want this animation to play
+	-- PlayerJoinedMessageCommand=function(self, params)
+	-- 	if params.Player == player then
+	-- 		self:visible(true)
+	-- 	end
+	-- end,
 	PlayerUnjoinedMessageCommand=function(self, params)
 		if params.Player == player then
 			self:visible(false)

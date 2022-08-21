@@ -13,11 +13,12 @@ return Def.ActorFrame{
 	CurrentSongChangedMessageCommand=function(self) self:queuecommand("Reset") end,
 	CurrentCourseChangedMessageCommand=function(self) self:queuecommand("Reset") end,
 
-	PlayerJoinedMessageCommand=function(self, params)
-		if params.Player == player then
-			self:queuecommand("Appear" .. pn)
-		end
-	end,
+	--since we're now resetting ScreenSelectMusicWide when a new player joins, we don't want this animation to play
+	-- PlayerJoinedMessageCommand=function(self, params)
+	-- 	if params.Player == player then
+	-- 		self:queuecommand("Appear" .. pn)
+	-- 	end
+	-- end,
 
 	-- Simply Love doesn't support player unjoining (that I'm aware of!) but this
 	-- animation is left here as a reminder to a future me to maybe look into it.
