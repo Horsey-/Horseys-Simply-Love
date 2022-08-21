@@ -1,13 +1,17 @@
 -- Majority of code borrowed from Mr. ThatKid and Sudospective
 
-local NotefieldRenderBefore = 390 --THEME:GetMetric("Player","DrawDistanceBeforeTargetsPixels")
+-- the draw distance needs to be dependant on doubles mode because the notefield has to be zoomed out in order for the doubles NoteField to fit onscreen
+local NotefieldRenderBefore = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and 790 or 390 --THEME:GetMetric("Player","DrawDistanceBeforeTargetsPixels")
 local NotefieldRenderAfter = 0 --THEME:GetMetric("Player","DrawDistanceAfterTargetsPixels")
-local ReceptorPosNormal = _screen.cy-170
-local ReceptorPosReverse = _screen.cy+170
+--
+-- the receptor position needs to change depending on doubles mode to fit the doubles NoteField onscreen
+local ReceptorPosNormal = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and _screen.cy-365 or _screen.cy-170
+local ReceptorPosReverse = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and _screen.cy+365 or _screen.cy+170
+--
 local ReceptorOffset = ReceptorPosReverse - ReceptorPosNormal
 local NotefieldY = (ReceptorPosNormal + ReceptorPosReverse) / 2
 
-local PlayerPos = GAMESTATE:GetNumPlayersEnabled() == 1 and "OnePlayerTwoSides" or "TwoPlayersTwoSides"
+
 local PreviewDelay = THEME:GetMetric("ScreenSelectMusic", "SampleMusicDelay")
 
 local function GetCurrentChartIndex(pn, ChartArray)
@@ -29,9 +33,8 @@ local t = Def.ActorFrame {}
 
 -- to do:
 
---account for reverse direction with both players joined (swap the elements onscreen)
+
 --Down+Left (on dance pad) to increase speed mod
---figure out why P2 profile is problematic for loading
 
 for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
     -- To avoid crashes with player 2
@@ -41,20 +44,19 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
         Name="Player" .. ToEnumShortString(pn),
         FOV=45,
         InitCommand=function(self)
-            -- self:xy(_screen.cx+293, _screen.cy-14)
-            -- :zoom(SCREEN_HEIGHT / 480):visible(true)
-            if pnNoteField == 0 then
-              self:x(_screen.cx+293)
-            elseif pnNoteField == 1 then
-              self:x(_screen.cx-293)
-            end
-
-            if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
-              self:zoom(SCREEN_HEIGHT / 1080)
+            if GAMESTATE:GetNumPlayersEnabled() == 2 then
+              if pnNoteField == 0 then
+                self:x(_screen.cx-293)
+              elseif pnNoteField == 1 then
+                self:x(_screen.cx+293)
+              end
             else
-              self:zoom(SCREEN_HEIGHT / 480)
+              if pnNoteField == 0 then
+                self:x(_screen.cx+293)
+              elseif pnNoteField == 1 then
+                self:x(_screen.cx-293)
+              end
             end
-            self:visible(true)
         end,
 
         LoadFont("Common Normal")..{
@@ -76,14 +78,14 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
             YReverseOffsetPixels = ReceptorOffset,
             FieldID=-1,
             OnCommand=function(self)
-                self:ChangeReload( GAMESTATE:GetCurrentSteps(pnNoteField) )
-                self:y(NotefieldY):GetPlayerOptions("ModsLevel_Current"):StealthPastReceptors(true, true)
-                self:AutoPlay(true)
-                --don't need to load this module for player note velocities to show up...? Disabling this module makes the arrows appear with their correct velocity based on the current speed mod selected by the player
-                -- LoadModule("Player.SetSpeed.lua")(pn)
-                local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
-                --force Mini% to 0 here because it throws off the notefield positioning; this notefield is meant to be a preview of the steps in the space allowed, not a complete 1:1 recreation of what the player will see on ScreenGameplay
-                self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray):Mini(0)
+              self:ChangeReload( GAMESTATE:GetCurrentSteps(pnNoteField) )
+              self:y(NotefieldY):GetPlayerOptions("ModsLevel_Current"):StealthPastReceptors(true, true)
+              self:AutoPlay(true)
+              --don't need to load this module for player note velocities to show up...? Disabling this module makes the arrows appear with their correct velocity based on the current speed mod selected by the player
+              -- LoadModule("Player.SetSpeed.lua")(pn)
+              local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
+              --force Mini% to 0 here because it throws off the notefield positioning; this notefield is meant to be a preview of the steps in the space allowed, not a complete 1:1 recreation of what the player will see on ScreenGameplay
+              self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray):Mini(0)
             end,
 
             CurrentStepsP1ChangedMessageCommand=function(self) self:playcommand("Refresh") end,
@@ -94,6 +96,12 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
             RefreshCommand=function(self)
                 self:AutoPlay(false)
                 local ChartArray = nil
+
+                if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
+                  self:zoom(SCREEN_HEIGHT / 950)
+                else
+                  self:zoom(SCREEN_HEIGHT / 480)
+                end
 
                 local Song = GAMESTATE:GetCurrentSong()
                 if Song then ChartArray = Song:GetAllSteps() else return end
