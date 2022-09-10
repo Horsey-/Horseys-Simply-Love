@@ -33,6 +33,8 @@ local af = Def.ActorFrame{
 	-- next, load visual elements; the order of these matters
 	-- i.e. content in PerPlayer/Over needs to draw on top of content from PerPlayer/Under
 
+	LoadActor("./NotefieldPreview.lua"),
+
 	-- number of steps, jumps, holds, etc., and high scores associated with the current stepchart
 	LoadActor("./PaneDisplay.lua"),
 
@@ -64,6 +66,8 @@ local af = Def.ActorFrame{
 	LoadActor("../ScreenSelectMusic overlay/EscapeFromEventMode.lua"),
 
 	LoadActor("../ScreenSelectMusic overlay/SongSearch/default.lua"),
+
+	LoadActor("./footer.lua"),
 }
 
 return af

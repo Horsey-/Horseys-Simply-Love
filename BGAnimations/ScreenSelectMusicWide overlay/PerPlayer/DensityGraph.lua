@@ -6,13 +6,18 @@ local player = ...
 local pn = ToEnumShortString(player)
 
 -- Height and width of the density graph.
-local height = 64
+local height = GAMESTATE:GetNumPlayersEnabled() == 2 and 35 or 64
 local width = _screen.w/3.195
 
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:visible( GAMESTATE:IsHumanPlayer(player) )
-		self:xy(_screen.cx-293, _screen.cy+56)
+		self:x(_screen.cx-293)
+		if GAMESTATE:GetNumPlayersEnabled() == 2 then
+			self:y(_screen.cy+103)
+		else
+			self:y(_screen.cy+56)
+		end
 
 		if player == PLAYER_2 then
 			self:x(_screen.cx+293)
@@ -137,7 +142,11 @@ af2[#af2+1] = Def.ActorFrame{
 af2[#af2+1] = Def.ActorFrame{
 	Name="PatternInfo",
 	InitCommand=function(self)
-		self:addy(90)
+		if GAMESTATE:GetNumPlayersEnabled() == 2 then
+			self:addy(61)
+		else
+			self:addy(90)
+		end
 	end,
 }
 

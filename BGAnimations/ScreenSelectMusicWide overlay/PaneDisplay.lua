@@ -3,7 +3,7 @@ local machine_profile = PROFILEMAN:GetMachineProfile()
 
 -- the height of the footer is defined in ./Graphics/_footer.lua, but we'll
 -- use it here when calculating where to position the PaneDisplay
-local footer_height = 32
+local footer_height = GAMESTATE:GetNumPlayersEnabled() == 2 and 0 or 32
 
 -- height of the PaneDisplay in pixels
 local pane_height = 60

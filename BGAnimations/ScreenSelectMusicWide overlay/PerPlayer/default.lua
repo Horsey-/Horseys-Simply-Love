@@ -11,6 +11,4 @@ for player in ivalues( PlayerNumber ) do
 	t[#t+1] = LoadActor("./PlayerProfiles.lua", player)
 end
 
-t[#t+1] = LoadActor("./NotefieldPreview.lua")
-
 return t
