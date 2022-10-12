@@ -1,18 +1,6 @@
 -- Majority of code borrowed from Mr. ThatKid and Sudospective
 
--- the draw distance needs to be dependant on doubles mode because the notefield has to be zoomed out in order for the doubles NoteField to fit onscreen
--- we'll handle the different UIs below when taking into account whether a player has a profile loaded or not
-
 local NotefieldRenderAfter = 0 --THEME:GetMetric("Player","DrawDistanceAfterTargetsPixels")
---
--- the receptor position needs to change depending on doubles mode to fit the doubles NoteField onscreen
-local ReceptorPosNormal = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and _screen.cy-365+230 or _screen.cy-170
-local ReceptorPosReverse = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and _screen.cy+365+230 or _screen.cy+170
---
-local ReceptorOffset = ReceptorPosReverse - ReceptorPosNormal
-local NotefieldY = (ReceptorPosNormal + ReceptorPosReverse) / 2
-
-
 local PreviewDelay = THEME:GetMetric("ScreenSelectMusic", "SampleMusicDelay")
 
 local function GetCurrentChartIndex(pn, ChartArray)
@@ -40,9 +28,10 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
     -- To avoid crashes with player 2
     local pnNoteField = PlayerNumber:Reverse()[pn]
 
+    -- the draw distance needs to be dependant on doubles mode because the notefield has to be zoomed out in order for the doubles NoteField to fit onscreen
     local function NotefieldRenderBefore()  --THEME:GetMetric("Player","DrawDistanceBeforeTargetsPixels")
       if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
-        return 790
+        return 800
       else
         if PROFILEMAN:IsPersistentProfile(pnNoteField) then
           return 740
@@ -68,7 +57,7 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
         elseif pnNoteField == 1 then
           --with profile
           if PROFILEMAN:IsPersistentProfile(pn) then
-            return _screen.cx+373
+            return _screen.cx+213
           --without profile
           else
             return _screen.cx+293
@@ -106,6 +95,51 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
         return 1
       end
     end
+
+    local function ReceptorPosNormal()
+      --2 players
+      if GAMESTATE:GetNumPlayersEnabled() == 2 then
+        --with profiles
+        if PROFILEMAN:IsPersistentProfile(pn) then
+          return _screen.cy-115
+        --without profiles
+        else
+          return _screen.cy-170
+        end
+      --1 player
+      else
+        --doubles mode
+        if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
+          return _screen.cy-135
+        end
+
+        return _screen.cy-170
+      end
+    end
+
+    local function ReceptorPosReverse()
+      --2 players
+      if GAMESTATE:GetNumPlayersEnabled() == 2 then
+        --with profiles
+        if PROFILEMAN:IsPersistentProfile(pn) then
+          return _screen.cy+492
+        --without profiles
+        else
+          return _screen.cy+35
+        end
+      --1 player
+      else
+        --doubles mode
+        if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
+          return _screen.cy+615
+        end
+
+        return _screen.cy+170
+      end
+    end
+
+    local ReceptorOffset = ReceptorPosReverse() - ReceptorPosNormal()
+    local NotefieldY = (ReceptorPosNormal() + ReceptorPosReverse()) / 2
 
     t[#t+1] = Def.ActorFrame {
         Name="Player" .. ToEnumShortString(pn),
