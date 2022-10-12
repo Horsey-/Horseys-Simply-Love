@@ -1,4 +1,4 @@
--- Majority of code borrowed from Mr. ThatKid and Sudospective
+-- Majority of code borrowed from Mr. ThatKid and Sudospective; with much help from the OutFox discord.
 
 local NotefieldRenderAfter = 0 --THEME:GetMetric("Player","DrawDistanceAfterTargetsPixels")
 local PreviewDelay = THEME:GetMetric("ScreenSelectMusic", "SampleMusicDelay")
@@ -19,11 +19,6 @@ end
 
 local t = Def.ActorFrame {}
 
-
--- to do:
-
---Down+Left (on dance pad) to increase speed mod
-
 for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
     -- To avoid crashes with player 2
     local pnNoteField = PlayerNumber:Reverse()[pn]
@@ -31,7 +26,7 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
     -- the draw distance needs to be dependant on doubles mode because the notefield has to be zoomed out in order for the doubles NoteField to fit onscreen
     local function NotefieldRenderBefore()  --THEME:GetMetric("Player","DrawDistanceBeforeTargetsPixels")
       if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
-        return 800
+        return 805
       else
         if PROFILEMAN:IsPersistentProfile(pnNoteField) then
           return 740
@@ -148,15 +143,6 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
           self:x(NotefieldX())
           self:zoom(NotefieldZoom())
         end,
-
-        LoadFont("Common Normal")..{
-            InitCommand=function(self)
-              local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Current")
-
-              self:settext(PlayerModsArray)
-              self:maxwidth(200)
-            end,
-        },
 
         Def.NoteField {
             Name = "NotefieldPreview",
