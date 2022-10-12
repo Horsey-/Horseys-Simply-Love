@@ -2,12 +2,12 @@
 
 -- the draw distance needs to be dependant on doubles mode because the notefield has to be zoomed out in order for the doubles NoteField to fit onscreen
 -- we'll handle the different UIs below when taking into account whether a player has a profile loaded or not
-local NotefieldRenderBefore = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and 790 or 390 --THEME:GetMetric("Player","DrawDistanceBeforeTargetsPixels")
+
 local NotefieldRenderAfter = 0 --THEME:GetMetric("Player","DrawDistanceAfterTargetsPixels")
 --
 -- the receptor position needs to change depending on doubles mode to fit the doubles NoteField onscreen
-local ReceptorPosNormal = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and _screen.cy-365 or _screen.cy-170
-local ReceptorPosReverse = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and _screen.cy+365 or _screen.cy+170
+local ReceptorPosNormal = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and _screen.cy-365+230 or _screen.cy-170
+local ReceptorPosReverse = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and _screen.cy+365+230 or _screen.cy+170
 --
 local ReceptorOffset = ReceptorPosReverse - ReceptorPosNormal
 local NotefieldY = (ReceptorPosNormal + ReceptorPosReverse) / 2
@@ -40,34 +40,79 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
     -- To avoid crashes with player 2
     local pnNoteField = PlayerNumber:Reverse()[pn]
 
+    local function NotefieldRenderBefore()  --THEME:GetMetric("Player","DrawDistanceBeforeTargetsPixels")
+      if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
+        return 790
+      else
+        if PROFILEMAN:IsPersistentProfile(pnNoteField) then
+          return 740
+        else
+          return 390
+        end
+      end
+    end
+
+    local function NotefieldX()
+      -- 2 players joined UI
+      if GAMESTATE:GetNumPlayersEnabled() == 2 then
+        --player 1
+        if pnNoteField == 0 then
+          --with profile
+          if PROFILEMAN:IsPersistentProfile(pn) then
+            return _screen.cx-213
+          --without profile
+          else
+            return _screen.cx-293
+          end
+        --player 2
+        elseif pnNoteField == 1 then
+          --with profile
+          if PROFILEMAN:IsPersistentProfile(pn) then
+            return _screen.cx+373
+          --without profile
+          else
+            return _screen.cx+293
+          end
+        end
+      -- single player UI (won't differ based on whether a profile is loaded)
+      else
+        --player 1
+        if pnNoteField == 0 then
+          return _screen.cx+293
+        --player 2
+        elseif pnNoteField == 1 then
+          return _screen.cx-293
+        end
+      end
+    end
+
+    local function NotefieldZoom()
+      --2 players
+      if GAMESTATE:GetNumPlayersEnabled() == 2 then
+        --with profiles
+        if PROFILEMAN:IsPersistentProfile(pn) then
+          return 0.4
+        --without profiles
+        else
+          return 1
+        end
+      --1 player
+      else
+        --doubles mode
+        if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then
+          return 0.5
+        end
+        --default to zoom(1) outside of doubles mode
+        return 1
+      end
+    end
+
     t[#t+1] = Def.ActorFrame {
         Name="Player" .. ToEnumShortString(pn),
         FOV=45,
         InitCommand=function(self)
-          -- 2 players joined UI
-            if GAMESTATE:GetNumPlayersEnabled() == 2 then
-              if pnNoteField == 0 then
-                self:x(_screen.cx-213)
-              elseif pnNoteField == 1 then
-                self:x(_screen.cx+373)
-              end
-            -- UI for players with a Profile
-              if PROFILEMAN:IsPersistentProfile(pn) then
-                self:zoom(0.4)
-                self:addy(20)
-            -- UI for players without a profile
-              else
-                self:zoom(1)
-                self:addx(-80)
-              end
-          -- single player UI
-            else
-              if pnNoteField == 0 then
-                self:x(_screen.cx+293)
-              elseif pnNoteField == 1 then
-                self:x(_screen.cx-293)
-              end
-            end
+          self:x(NotefieldX())
+          self:zoom(NotefieldZoom())
         end,
 
         LoadFont("Common Normal")..{
@@ -83,18 +128,15 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
             Name = "NotefieldPreview",
             Player = pnNoteField,
             NoteSkin = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptions('ModsLevel_Preferred'):NoteSkin(),
-            -- Chart = "Hard",
+            Chart = Challenge,
             DrawDistanceAfterTargetsPixels = NotefieldRenderAfter,
-            -- here we'll modify the draw distance based on whether a player has a profile loaded
-            DrawDistanceBeforeTargetsPixels = PROFILEMAN:IsPersistentProfile(pnNoteField) and NotefieldRenderBefore + 350 or NotefieldRenderBefore,
+            DrawDistanceBeforeTargetsPixels = NotefieldRenderBefore(),
             YReverseOffsetPixels = ReceptorOffset,
             FieldID=-1,
             OnCommand=function(self)
               self:ChangeReload( GAMESTATE:GetCurrentSteps(pnNoteField) )
               self:y(NotefieldY):GetPlayerOptions("ModsLevel_Current"):StealthPastReceptors(true, true)
               self:AutoPlay(true)
-              --don't need to load this module for player note velocities to show up...? Disabling this module makes the arrows appear with their correct velocity based on the current speed mod selected by the player
-              -- LoadModule("Player.SetSpeed.lua")(pn)
               local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
               --force Mini% to 0 here because it throws off the notefield positioning; this notefield is meant to be a preview of the steps in the space allowed, not a complete 1:1 recreation of what the player will see on ScreenGameplay
               self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray):Mini(0)
@@ -111,8 +153,6 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
 
                 local Song = GAMESTATE:GetCurrentSong()
                 if Song then ChartArray = Song:GetAllSteps() else return end
-                --don't need to load this module for player note velocities to show up...? Disabling this module makes the arrows appear with their correct velocity based on the current speed mod selected by the player
-                -- LoadModule("Player.SetSpeed.lua")(pn)
                 local PlayerModsArray = GAMESTATE:GetPlayerState(pnNoteField):GetPlayerOptionsString("ModsLevel_Preferred")
                 --force Mini% to 0 here because it throws off the notefield positioning; this notefield is meant to be a preview of the steps in the space allowed, not a complete 1:1 recreation of what the player will see on ScreenGameplay
                 self:GetPlayerOptions("ModsLevel_Current"):FromString(PlayerModsArray):Mini(0)
