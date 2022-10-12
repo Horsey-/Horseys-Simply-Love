@@ -668,7 +668,7 @@ if GAMESTATE:GetNumPlayersEnabled() == 2 then return Def.ActorFrame{
 
 	-- fallback avatar
 	Def.ActorFrame{
-		InitCommand=function(self) self:visible(false):xy(-132,-40) end,
+		InitCommand=function(self) self:visible(false):y(15) end,
 		OnCommand=function(self)
 			if avatar == nil then
 				self:visible(true)
@@ -679,18 +679,18 @@ if GAMESTATE:GetNumPlayersEnabled() == 2 then return Def.ActorFrame{
 
 		Def.Quad{
 			InitCommand=function(self)
-				self:align(0,0):zoomto(80,80):diffuse(color("#283239aa"))
+				self:zoomto(70,70):diffuse(color("#283239aa"))
 			end
 		},
 		LoadActor(THEME:GetPathG("", "_VisualStyles/".. ThemePrefs.Get("VisualStyle") .."/SelectColor"))..{
 			InitCommand=function(self)
-				self:align(0.5,0):zoom(0.09):diffusealpha(0.9):xy(40,8)
+				self:zoom(0.09):diffusealpha(0.9):y(-5)
 			end
 		},
 		LoadFont("Common Normal")..{
 			Text=THEME:GetString("ProfileAvatar","NoAvatar"),
 			InitCommand=function(self)
-				self:horizalign(center):zoom(0.815):diffusealpha(0.9):xy(40,71)
+				self:zoom(0.55):diffusealpha(0.9):y(28)
 			end,
 		}
 	},
