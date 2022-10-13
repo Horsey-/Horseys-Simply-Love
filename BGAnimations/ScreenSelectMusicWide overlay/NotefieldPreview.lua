@@ -136,6 +136,26 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
     local ReceptorOffset = ReceptorPosReverse() - ReceptorPosNormal()
     local NotefieldY = (ReceptorPosNormal() + ReceptorPosReverse()) / 2
 
+  --upgrade to OutFox LTS 0.4.18 or later for NoteField previews
+  if not ActorUtil.IsRegisteredClass("NoteField") then
+    t[#t+1] = Def.ActorFrame {
+        Name="Player" .. ToEnumShortString(pn),
+        FOV=45,
+        InitCommand=function(self)
+          self:x(NotefieldX())
+          self:zoom(NotefieldZoom())
+        end,
+
+        LoadFont("Common Normal")..{
+          InitCommand=function(self)
+            self:y(_screen.cy)
+            self:settext("Upgrade To OutFox LTS 0.4.18 Or Later For NoteField Previews \n \n (missing NoteField class)")
+            self:wrapwidthpixels(250)
+    				self:vertspacing(-5)
+          end,
+        },
+    }
+  else
     t[#t+1] = Def.ActorFrame {
         Name="Player" .. ToEnumShortString(pn),
         FOV=45,
@@ -190,6 +210,7 @@ for i, pn in ipairs(GAMESTATE:GetEnabledPlayers()) do
             end
         }
     }
+    end
 end
 
 return t
