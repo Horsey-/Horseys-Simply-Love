@@ -4,24 +4,23 @@
 
 ## IMPORTANT, WARNING, READ ME!:
 
-Profile score counts currently only work on OutFox Alpha 4.15 and above (0.4.15); the necessary function GetTotalScoresWithGrade() has not been backported to Stepmania/ITGMania yet. The latest version of Outfox can be downloaded from the link below. If you would like to use this theme on any other version of SM5/OutFox, you will see an error message where profile counts would be.
+<sup>Since many aspects of this theme incorporate OutFox-only APIs. It is recommended to stay up-to-date with the latest OutFox release. Alpha V will be released eventually, but as of now, Project OutFox 0.4.18 LTS or newer is recommended since Alpha V is not ready for daily use. See the OutFox blog below, and the OutFox discord channel for the latest builds.</sup>
 
 [Click here to visit the OutFox blog](https://projectoutfox.com)
 
-## 🤠About This Fork🐴
-
-The goal of this fork is to improve upon the mainline Simply Love theme. The upstream maintainers are very particular in what they will accept as a pull request based on their own personal idea of what the theme should be. I take a far more progressive approach to my fork and will actively look to merge new and interesting ideas from the many forks out there. Sometimes though, my fork aims to clean up /many/ of the inconsistencies and general UI oddities that plague the mainline branch. I hope you enjoy this fork if you find that you prefer it to the mainline theme.
-
-The new features and design paradigms that exist in this fork are listed below:
+[Click here to visit the OutFox discord channel](https://discord.gg/fXSX2TaRr5)
 
 ## ScreenSelectMusic and ScreenEvaluation redesign
 
-The most drastic change in this fork is the rework of ScreenSelectMusic. The screen was completely overhauled to have a different UI (and screen) depending on the aspect ratio selected in system options. In the interest of saving space, many new features will not be supported in 4:3 aspect ratio because there simply is not enough space onscreen with older displays. This theme fully utilizes the allotted space in 16:9. It is *highly recommended* to use this theme in 16:9 aspect ratio. When you select 16:9, instead of going to ScreenSelectMusic, you'll be automatically directed to a new screen called ScreenSelectMusicWide which was created to keep the 16:9 and 4:3 aspect ratio environments completely separate from each other.
+<sup>ScreenSelectMusic will look different depending on the aspect ratio selected in system options; this screen was completely overhauled to make room for chart previews when set to a widescreen aspect ratio. In the interest of saving space, many new features will not be supported in 4:3 aspect ratio because there simply is not enough space onscreen with older displays. This theme fully utilizes the allotted space in 16:9. It is *highly recommended* to use this theme in 16:9 aspect ratio. When you select 16:9, instead of going to ScreenSelectMusic, you'll be automatically directed to a new screen called ScreenSelectMusicWide which was created to keep the 16:9 and 4:3 aspect ratio environments completely separate from each other.</sup>
 
+#### Chart Previews On ScreenSelectMusicWide
+
+<sup>Chart previews is the biggest thing to happen to the post-ITG community. New rhythm games have added this feature; finally it arrives to dance games! The chart preview is powered by the new NoteField class in OutFox Alpha 4 (recommended to use Alpha 0.4.18 RC12 or newer). The chart preview will display all player mods *except* mods that add/subtract/modify steps in any way. All other visual mods such as your noteskin, speed mod, visual mods will all show up. </sup>
 
 The screenshots below showcase the redesigned screens:
 
-![ScreenSelectMusicWide](https://user-images.githubusercontent.com/5679966/169926739-056a4964-71eb-4d2c-8211-55afbd2bed1f.jpg)
+![ScreenSelectMusicWide](https://user-images.githubusercontent.com/5679966/195915023-aff6b6ef-7f92-4847-b852-c2376be46186.png)
 ![ScreenEvaluation common](https://user-images.githubusercontent.com/5679966/169926744-86e2eaf0-1820-45a3-9f75-75a8852856d0.png)
 ![Highscore Expansion (Entry)](https://i.imgur.com/G574IaR.png)
 
@@ -84,6 +83,8 @@ You'll need to download the old vocalize pack [here](https://www.mediafire.com/f
 Completely reworked ScreenSelectMusic; this screen is no longer very lopsided in appearance with the song wheel on the right side and player elements squished on the left side. The main goal of the rework was to put all of the P1 assets on the left and P2 assets on the right.
 
  - ScreenSelectMusicWide is now visually balanced
+ 
+ - Chart Previews enabled by the new NoteField class in OutFox
 
  - There is a huge amount of real estate opened up for new features on this screen.
 
