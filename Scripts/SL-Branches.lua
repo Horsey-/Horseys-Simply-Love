@@ -51,7 +51,11 @@ SelectMusicOrCourse = function()
 			return "ScreenSelectMusicCasual"
 		end
 
-		return "ScreenSelectMusic"
+		if IsUsingWideScreen() then
+ 			return "ScreenSelectMusicWide"
+ 		else
+ 			return "ScreenSelectMusic"
+ 		end
 	end
 end
 
