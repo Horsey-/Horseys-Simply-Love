@@ -61,6 +61,6 @@ return Def.ActorFrame{
 
 	LoadFont("Common Normal")..{
 		Text=optionslist,
-		InitCommand=function(self) self:zoom(font_zoom):xy(-140,-5):align(0,0):vertspacing(-6):_wrapwidthpixels((width-10) / font_zoom) end
+		InitCommand=function(self) self:zoom(font_zoom):xy(-140,0):align(0,0.5):vertspacing(-6):_wrapwidthpixels((width-10) / font_zoom):maxheight(25) end
 	}
 }

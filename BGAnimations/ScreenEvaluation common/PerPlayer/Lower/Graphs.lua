@@ -7,6 +7,10 @@ local NumPlayers = #GAMESTATE:GetHumanPlayers()
 local GraphWidth  = THEME:GetMetric("GraphDisplay", "BodyWidth")
 local GraphHeight = THEME:GetMetric("GraphDisplay", "BodyHeight")
 
+local my_peak = GAMESTATE:Env()[pn.."PeakNPS"]
+local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
+local totalMeasures = streamMeasures + breakMeasures
+
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:y(_screen.cy + 124)
@@ -111,7 +115,7 @@ if storage.DeathSecond ~= nil then
 		InitCommand=function(self)
 			self:zoom(1.25)
 			-- Start at the start of the graph
-			self:addx(-GraphWidth / 2):addy(GraphHeight - 10)
+			self:addx(-GraphWidth / 2):addy(GraphHeight - 19)
 			-- Move to where the player failed
 			self:addx(GraphWidth * graphPercentage)
 		end,
@@ -161,6 +165,34 @@ if storage.DeathSecond ~= nil then
 				self:addx(addx)
 			end
 		}	
+	}
+end
+
+if not GAMESTATE:IsCourseMode() then
+	af[#af+1] = Def.ActorFrame {
+
+		-- stream counter background quad
+		Def.Quad{
+			InitCommand=function (self)
+				self:zoomto(GraphWidth,12):diffuse(0,0,0,0.4):y(GraphHeight-6)
+			end
+		},
+
+		-- stream counter text
+		LoadFont("Common Normal")..{
+			Text="",
+			InitCommand=function(self)
+				self:maxwidth(GraphWidth*2.5):zoom(0.4):y(GraphHeight-6)
+			end,
+			OnCommand=function(self)
+				if GenerateBreakdownText(pn, 0) == "No Streams!" then
+					self:settext("No Streams!  |  " .. ("%s: %g  |  "):format(THEME:GetString("ScreenGameplay", "PeakNPS"), round(my_peak * SL.Global.ActiveModifiers.MusicRate,2)) .. ("Peak eBPM: %.0f"):format(round(my_peak * 15 * SL.Global.ActiveModifiers.MusicRate,2)))
+				else
+					self:settext("Streams: ".. GenerateBreakdownText(pn, 0) .. "  |  " .. "Total Stream: ".. string.format("%d/%d (%0.1f%%)", streamMeasures, totalMeasures, streamMeasures/totalMeasures*100) .. "  |  ".. ("%s: %g  |  "):format(THEME:GetString("ScreenGameplay", "PeakNPS"), round(my_peak * SL.Global.ActiveModifiers.MusicRate,2)) .. ("Peak eBPM: %.0f"):format(round(my_peak * 15 * SL.Global.ActiveModifiers.MusicRate,2)))
+				end
+			end,
+		}
+
 	}
 end
 

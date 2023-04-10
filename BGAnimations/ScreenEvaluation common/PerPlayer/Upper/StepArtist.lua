@@ -17,22 +17,57 @@ end
 
 local marquee_index = 0
 
-return LoadFont("Common Normal")..{
-	InitCommand=function(self) self:zoom(0.7):xy(115,_screen.cy-80):maxwidth(200) end,
-	OnCommand=function(self)
-		local textColor = Color.White
-		local shadowLength = 0
-		if ThemePrefs.Get("RainbowMode") and not HolidayCheer() then
-			textColor = Color.Black
-		end
-		self:diffuse(textColor)
-		self:shadowlength(shadowLength)
+return Def.ActorFrame{
+  -- coloured box behind Stepartist text
+  Def.Quad{
+  	InitCommand=function(self)
+			if SL.Global.GameMode == "Casual" then
+	 			self:zoomto(131,30)
+		 		self:x(51)
+			else
+				self:zoomto(140.5,30)
+				self:x(40.5)
+			end
+			self:y( _screen.cy-71)
+			if player == PLAYER_1 then
+				self:x( self:GetX() * -1 )
+			end
+			--hide this colored box element if there is no credit data to display
+			if #info == 0 then
+				self:visible(false)
+			end
+			local currentSteps = GAMESTATE:GetCurrentSteps(player)
+			if currentSteps then
+				local currentDifficulty = currentSteps:GetDifficulty()
+					if ThemePrefs.Get("RainbowMode") then
+						self:diffuse(ColorLightTone(DifficultyColor(currentDifficulty)), true )
+					else
+						self:diffuse(ColorDarkTone(DifficultyColor(currentDifficulty)), true )
+					end
+			end
+  	end,
+  },
 
+  LoadFont("Common Normal")..{
+ 	InitCommand=function(self)
+ 		self:zoom(0.75)
+ 		self:y(_screen.cy-71)
+		self:horizalign(center)
+		if ThemePrefs.Get("RainbowMode") then self:diffuse(Color.Black) end
+ 		if SL.Global.GameMode == "Casual" then
+ 			self:x(51)
+ 			self:maxwidth(155)
+ 		elseif GAMESTATE:IsCourseMode() then
+ 			self:x(55.5)
+ 			self:maxwidth(165)
+ 		else
+ 			self:x(40)
+ 			self:maxwidth(180)
+ 		end
+ 	end,
+	OnCommand=function(self)
 		if player == PLAYER_1 then
 			self:x( self:GetX() * -1 )
-			self:horizalign(left)
-		else
-			self:horizalign(right)
 		end
 
 		if type(info)=="table" and #info > 0 then
@@ -57,4 +92,5 @@ return LoadFont("Common Normal")..{
 		end
 	end,
 	OffCommand=function(self) self:stoptweening() end
+}
 }

@@ -93,7 +93,7 @@ if IsNice() then
 		end,
 		OnCommand=function(self)
 
-			self:y(_screen.cy-94)
+			self:y(_screen.cy-95)
 			self:zoom(0.4)
 
 			if player == PLAYER_1 then
