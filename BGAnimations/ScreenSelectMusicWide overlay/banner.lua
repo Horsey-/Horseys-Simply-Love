@@ -85,7 +85,7 @@ t[#t+1] = Def.ActorFrame{
 }
 
 
-if not GAMESTATE:IsCourseMode() then
+if not GAMESTATE:IsCourseMode() and ThemePrefs.Get("ShowCDTitles") then
 	t[#t+1] = Def.Sprite {
 		OnCommand=function(self)
 			self:draworder(101)
