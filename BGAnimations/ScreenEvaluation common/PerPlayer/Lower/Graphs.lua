@@ -168,32 +168,4 @@ if storage.DeathSecond ~= nil then
 	}
 end
 
-if not GAMESTATE:IsCourseMode() then
-	af[#af+1] = Def.ActorFrame {
-
-		-- stream counter background quad
-		Def.Quad{
-			InitCommand=function (self)
-				self:zoomto(GraphWidth,12):diffuse(0,0,0,0.4):y(GraphHeight-6)
-			end
-		},
-
-		-- stream counter text
-		LoadFont("Common Normal")..{
-			Text="",
-			InitCommand=function(self)
-				self:maxwidth(GraphWidth*2.5):zoom(0.4):y(GraphHeight-6)
-			end,
-			OnCommand=function(self)
-				if GenerateBreakdownText(pn, 0) == "No Streams!" then
-					self:settext("No Streams!  |  " .. ("%s: %g  |  "):format(THEME:GetString("ScreenGameplay", "PeakNPS"), round(my_peak * SL.Global.ActiveModifiers.MusicRate,2)) .. ("Peak eBPM: %.0f"):format(round(my_peak * 15 * SL.Global.ActiveModifiers.MusicRate,2)))
-				else
-					self:settext("Streams: ".. GenerateBreakdownText(pn, 0) .. "  |  " .. "Total Stream: ".. string.format("%d/%d (%0.1f%%)", streamMeasures, totalMeasures, streamMeasures/totalMeasures*100) .. "  |  ".. ("%s: %g  |  "):format(THEME:GetString("ScreenGameplay", "PeakNPS"), round(my_peak * SL.Global.ActiveModifiers.MusicRate,2)) .. ("Peak eBPM: %.0f"):format(round(my_peak * 15 * SL.Global.ActiveModifiers.MusicRate,2)))
-				end
-			end,
-		}
-
-	}
-end
-
 return af
