@@ -23,36 +23,21 @@ return Def.ActorFrame{
 	-- animation is left here as a reminder to a future me to maybe look into it.
 	PlayerUnjoinedMessageCommand=function(self, params)
 		if params.Player == player then
-			self:ease(0.5, 275):addy(scale(p,0,1,1,-1) * 30):diffusealpha(0)
+			self:accelerate(0.1):zoomy(0.6):decelerate(0.2):zoomy(1):accelerate(0.2):sleep(0.2):zoomy(0):visible(false)
 		end
 	end,
 
 	-- depending on the value of pn, this will either become
 	-- an AppearP1Command or an AppearP2Command when the screen initializes
-	["Appear"..pn.."Command"]=function(self) self:visible(true):ease(0.5, 275):addy(scale(p,0,1,-1,1) * 30) end,
+	["Appear"..pn.."Command"]=function(self) self:visible(true):zoomy(0):sleep(0.2):accelerate(0.2):zoomy(1):decelerate(0.2):zoomy(0.6):accelerate(0.1):zoomy(1) end,
 
 	InitCommand=function(self)
 		self:visible( false ):halign( p )
 
 		if player == PLAYER_1 then
-
-			if GAMESTATE:IsCourseMode() then
-				self:x( _screen.cx - (IsUsingWideScreen() and 356 or 346))
-				self:y(_screen.cy + 32)
-			else
-				self:x( _screen.cx - (IsUsingWideScreen() and 356 or 346))
-				self:y(_screen.cy + 12)
-			end
-
+			self:y(_screen.cy + 12.5)
 		elseif player == PLAYER_2 then
-
-			if GAMESTATE:IsCourseMode() then
-				self:x( _screen.cx - 210)
-				self:y(_screen.cy + 85)
-			else
-				self:x( _screen.cx - 244)
-				self:y(_screen.cy + 40)
-			end
+			self:x( _screen.cx + 254.5)
 		end
 
 		if GAMESTATE:IsHumanPlayer(player) then
@@ -60,43 +45,82 @@ return Def.ActorFrame{
 		end
 	end,
 
-	-- colored background quad
-	Def.Quad{
-		Name="BackgroundQuad",
-		InitCommand=function(self) self:zoomto(175, _screen.h/28):x(113):diffuse(color("#000000")) end,
-		ResetCommand=function(self)
-			local StepsOrTrail = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player) or GAMESTATE:GetCurrentSteps(player)
-
-			if StepsOrTrail then
-				local difficulty = StepsOrTrail:GetDifficulty()
-				self:diffuse( DifficultyColor(difficulty) )
-			else
-				self:diffuse( PlayerColor(player) )
+	-- colored background
+	Def.ActorFrame{
+		InitCommand=function(self)
+			self:y(4)
+			if player == PLAYER_1 then
+				self:x(107)
+			elseif player == PLAYER_2 then
+				self:x(66)
+				self:rotationy(180)
 			end
-		end
+	end,
+
+		Def.ActorMultiVertex{
+			InitCommand=function(self)
+				-- these coordinates aren't neat and tidy, but they do create three triangles
+				-- that fit together to approximate hurtpiggypig's original png asset
+				--change 422 for length, -17 changes the height, and +18 moves the "carrot" to under "STEPS"
+				local verts = {
+					--   x   y  z    r,g,b,a
+					{{-113, -32, 0}, {1,1,1,1}},
+					{{ _screen.w/2.0285, -32, 0}, {1,1,1,1}},
+					{{ _screen.w/2.0285, 16, 0}, {1,1,1,1}},
+
+					{{ _screen.w/2.0285, 16, 0}, {1,1,1,1}},
+					{{-113, 16, 0}, {1,1,1,1}},
+					{{-113, -32, 0}, {1,1,1,1}},
+
+					{{ -80, 16, 0}, {1,1,1,1}},
+					{{ -60, 16, 0}, {1,1,1,1}},
+					{{ -70, 29, 0}, {1,1,1,1}},
+				}
+				self:SetDrawState({Mode="DrawMode_Triangles"}):SetVertices(verts)
+				self:diffuse(GetCurrentColor())
+				self:xy(-50,0):zoom(0.5)
+			end,
+			ResetCommand=function(self)
+				local StepsOrTrail = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player) or GAMESTATE:GetCurrentSteps(player)
+
+				if StepsOrTrail then
+					local difficulty = StepsOrTrail:GetDifficulty()
+					self:diffuse( DifficultyColor(difficulty) )
+				else
+					self:diffuse( PlayerColor(player) )
+				end
+			end
+		},
 	},
 
 	--STEPS label
 	LoadFont("Common Normal")..{
 		Text=GAMESTATE:IsCourseMode() and Screen.String("SongNumber"):format(1) or Screen.String("STEPS"),
-		InitCommand=function(self)
-			self:diffuse(0,0,0,1):horizalign(left):x(30):maxwidth(40):zoom(0.8)
-		end,
-		UpdateTrailTextMessageCommand=function(self, params)
-			self:settext( THEME:GetString("ScreenSelectCourse", "SongNumber"):format(params.index) )
+		OnCommand=function(self)
+			self:diffuse(0,0,0,1)
+			self:maxwidth(40)
+			if player == PLAYER_1 then
+				self:horizalign(left)
+				self:x(3)
+			elseif player == PLAYER_2 then
+				self:horizalign(right)
+				self:x(170)
+			end
 		end
 	},
 
 	--stepartist text
 	LoadFont("Common Normal")..{
 		InitCommand=function(self)
-			self:diffuse(color("#1e282f")):horizalign(left):zoom(0.8)
-
-			if GAMESTATE:IsCourseMode() then
-				self:x(60):maxwidth(138)
-			else
-				self:x(75):maxwidth(124):diffuse(color("#000000"))
-			end
+			self:diffuse(color("#1e282f"))
+ 			self:maxwidth(217)
+ 				if player == PLAYER_1 then
+					self:x(46)
+ 					self:horizalign(left)
+				elseif player == PLAYER_2 then
+					self:x(126)
+ 					self:horizalign(right)
+ 				end
 		end,
 		ResetCommand=function(self)
 

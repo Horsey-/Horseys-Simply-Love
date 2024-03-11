@@ -1,12 +1,12 @@
 local MusicWheel, SelectedType
-local group_durations = LoadActor("./GroupDurations.lua")
+local group_durations = LoadActor("../../ScreenSelectMusic overlay/SongDescription/GroupDurations.lua")
 
 -- width of background quad
-local _w = IsUsingWideScreen() and 320 or 310
+local _w = 320
 
 local af = Def.ActorFrame{
 	OnCommand=function(self)
-		self:xy(_screen.cx - (IsUsingWideScreen() and 170 or 165), _screen.cy - 55)
+		self:xy(_screen.cx, SCREEN_TOP+192)
 	end,
 
 	CurrentSongChangedMessageCommand=function(self)    self:playcommand("Set") end,
@@ -20,7 +20,7 @@ local af = Def.ActorFrame{
 -- background Quad for Artist, BPM, and Song Length
 af[#af+1] = Def.Quad{
 	InitCommand=function(self)
-		self:setsize( _w, 50 )
+		self:setsize( _w, 70 )
 		self:diffuse(color("#1e282f"))
 
 		if ThemePrefs.Get("RainbowMode") then self:diffusealpha(0.9) end
@@ -30,34 +30,88 @@ af[#af+1] = Def.Quad{
 	end
 }
 
--- ActorFrame for Artist, BPM, and Song length
+-- ActorFrame for Folder/Group, Artist, BPM, and Song length
 af[#af+1] = Def.ActorFrame{
-	InitCommand=function(self) self:xy(-110,-6) end,
+	InitCommand=function(self) self:xy(-110,-16) end,
+
+	-- ----------------------------------------
+	-- Song Folder Label
+	LoadFont("Common Normal")..{
+		InitCommand=function(self)
+			self:zoom(0.9)
+			self:horizalign(right)
+			self:y(-10)
+			if ThemePrefs.Get("VerboseSongFolder") then
+				self:settext(THEME:GetString("SongDescription", "Folder"))
+			else
+				self:settext(THEME:GetString("SongDescription", "Group"))
+			end
+		end,
+		OnCommand=cmd(diffuse,color("0.5,0.5,0.5,1"))
+	},
+
+	-- ----------------------------------------
+	-- Song Folder
+ 	LoadFont("Common Normal")..{
+ 		InitCommand=function(self)
+			-- no need to hide this in CourseMode because this will instead settext to nothing and not show up
+			self:horizalign(left):xy(6,-10):maxwidth(285):zoom(0.9)
+		end,
+ 		SetCommand=function( actor )
+ 			local song = GAMESTATE:GetCurrentSong()
+ 			local text = ""
+ 				if ThemePrefs.Get("VerboseSongFolder") then
+ 					if song then
+ 							--I would like to find a better method to trim up GetSongDir, but this will work for now, because I highly doubt people will name their packs "Songs" or "AdditionalSongs"
+ 						local fulldir = song:GetSongDir();
+ 							--removes the "/ " suffix placed by GetSongDir() (will not impact
+ 						local remove_end = string.sub(fulldir, 0, -2);
+ 							--removes "/Songs/" prefix, but if a songs folder is called "Songs" you'll get weird formatting
+ 						local trimmed_dir = string.gsub(remove_end, "/Songs/", "", 1)
+ 							--removes "/AdditionalSongs/" from the directory string, and will cause formatting weirdness if there is a song folder with that name
+ 						local SongDir = string.gsub(trimmed_dir, "/AdditionalSongs/", "", 1)
+ 						text = SongDir
+ 					end
+ 				 actor:settext( text )
+ 			 else
+ 			--  This is a cleaner way to call the group name of a selected song, but I prefer the above method because it shows the actual songfolder directory, which sometimes has information in it. You can set your preference in Simply Love Options for which method you prefer.
+ 				 if song then
+ 					 actor:settext(song:GetGroupName());
+ 				 else
+ 					 actor:settext("")
+ 				 end
+ 			 end
+ 		end
+ 	},
 
 	-- ----------------------------------------
 	-- Artist Label
 	LoadFont("Common Normal")..{
-		Text=THEME:GetString("SongDescription", GAMESTATE:IsCourseMode() and "NumSongs" or "Artist"):upper(),
-		InitCommand=function(self) self:align(1,0):y(-11):maxwidth(44):diffuse(0.5,0.5,0.5,1) end,
+		Text=THEME:GetString("SongDescription", "Artist"):upper(),
+		InitCommand=function(self)
+			self:align(1,0)
+			self:maxwidth(44)
+			self:diffuse(0.5,0.5,0.5,1)
+			self:y(0):zoom(0.9)
+		end,
 	},
 
 	-- Song Artist (or number of Songs in this Course, if CourseMode)
 	LoadFont("Common Normal")..{
-		InitCommand=function(self) self:align(0,0):xy(5,-11) end,
+		InitCommand=function(self)
+			self:align(0,0)
+			self:x(5)
+			self:y(0):zoom(0.9)
+		end,
 		SetCommand=function(self)
-			local maxwidth = _w - 60
+			local song = GAMESTATE:GetCurrentSong()
+			self:settext( song and song:GetDisplayArtist() or "" )
 
-			if GAMESTATE:IsCourseMode() then
-				local course = GAMESTATE:GetCurrentCourse()
-				self:settext( course and #course:GetCourseEntries() or "" )
+			if not GAMESTATE:IsEventMode() and song and (song:IsLong() or song:IsMarathon()) then
+				-- make room for the "COUNTS AS 2/3 ROUNDS" bubble
+				self:maxwidth(152)
 			else
-				local song = GAMESTATE:GetCurrentSong()
-				self:settext( song and song:GetDisplayArtist() or "" )
-
-				if not GAMESTATE:IsEventMode() and song and (song:IsLong() or song:IsMarathon()) then
-					-- make room for the "COUNTS AS 2/3 ROUNDS" bubble
-					maxwidth = maxwidth - 120
-				end
+				self:maxwidth(287)
 			end
 
 			self:maxwidth(maxwidth)
@@ -69,7 +123,10 @@ af[#af+1] = Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		Text=THEME:GetString("SongDescription", "BPM"):upper(),
 		InitCommand=function(self)
-			self:align(1,0):y(10):diffuse(0.5,0.5,0.5,1)
+			self:horizalign(center)
+			self:diffuse(0.5,0.5,0.5,1)
+			self:xy(-12,24)
+ 			self:zoom(0.8)
 		end
 	},
 
@@ -77,8 +134,8 @@ af[#af+1] = Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		InitCommand=function(self)
 			-- vertical align has to be middle for BPM value in case of split BPMs having a line break
-			self:align(0, 0.5)
-			self:xy(5,17):diffuse(1,1,1,1):vertspacing(-8)
+			self:horizalign(center):diffuse(1,1,1,1):vertspacing(-8):x(5):maxwidth(78)
+			self:xy(-12,40)
 		end,
 		SetCommand=function(self)
 
@@ -95,7 +152,7 @@ af[#af+1] = Def.ActorFrame{
 			-- if only one player is joined, stringify the DisplayBPMs and return early
 			if #GAMESTATE:GetHumanPlayers() == 1 then
 				-- StringifyDisplayBPMs() is defined in ./Scipts/SL-BPMDisplayHelpers.lua
-				self:settext(StringifyDisplayBPMs() or ""):zoom(1)
+				self:settext(StringifyDisplayBPMs() or ""):zoom(0.8)
 				return
 			end
 
@@ -106,12 +163,12 @@ af[#af+1] = Def.ActorFrame{
 			-- it's likely that BPM range is the same for both charts
 			-- no need to show BPM ranges for both players if so
 			if p1bpm == p2bpm then
-				self:settext(p1bpm):zoom(1)
+				self:settext(p1bpm):zoom(0.8)
 
 			-- different BPM ranges for the two players
 			else
 				-- show the range for both P1 and P2 split by a newline character, shrunk slightly to fit the space
-				self:settext( "P1 ".. p1bpm .. "\n" .. "P2 " .. p2bpm ):zoom(0.8)
+				self:settext( "P1 ".. p1bpm .. "\n" .. "P2 " .. p2bpm ):zoom(0.5)
 				-- the "P1 " and "P2 " segments of the string should be grey
 				self:AddAttribute(0,             {Length=3, Diffuse={0.60,0.60,0.60,1}})
 				self:AddAttribute(3+p1bpm:len(), {Length=3, Diffuse={0.60,0.60,0.60,1}})
@@ -139,14 +196,15 @@ af[#af+1] = Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		Text=THEME:GetString("SongDescription", "Length"):upper(),
 		InitCommand=function(self)
-			self:align(1,0):diffuse(0.5,0.5,0.5,1)
-			self:x(_w-130):y(10)
+			self:horizalign(center):diffuse(0.5,0.5,0.5,1):xy(233,24):zoom(0.8)
 		end
 	},
 
 	-- Song Duration Value
 	LoadFont("Common Normal")..{
-		InitCommand=function(self) self:align(0,0):xy(_w-130 + 5, 10) end,
+		InitCommand=function(self)
+			self:horizalign(center):xy(233,40):zoom(0.8)
+		end,
 		SetCommand=function(self)
 			if MusicWheel == nil then MusicWheel = SCREENMAN:GetTopScreen():GetMusicWheel() end
 
@@ -203,8 +261,8 @@ if not GAMESTATE:IsEventMode() then
 	-- long/marathon version bubble graphic and text
 	af[#af+1] = Def.ActorFrame{
 		InitCommand=function(self)
-			self:x( IsUsingWideScreen() and 98 or 92 )
-			self:y(-12)
+			self:x(98)
+			self:y(-8)
 		end,
 		SetCommand=function(self)
 			local song = GAMESTATE:GetCurrentSong()
@@ -226,9 +284,9 @@ if not GAMESTATE:IsEventMode() then
 					{{-113, 16, 0}, {1,1,1,1}},
 					{{-113, -15, 0}, {1,1,1,1}},
 
-					{{ -98, 16, 0}, {1,1,1,1}},
-					{{ -78, 16, 0}, {1,1,1,1}},
-					{{ -88, 29, 0}, {1,1,1,1}},
+					{{ -98+134, 16-5, 0}, {1,1,1,1}},
+					{{ -78+134, 16-5, 0}, {1,1,1,1}},
+					{{ -88+134, 29-5, 0}, {1,1,1,1}},
 				}
 				self:SetDrawState({Mode="DrawMode_Triangles"}):SetVertices(verts)
 				self:diffuse(GetCurrentColor())

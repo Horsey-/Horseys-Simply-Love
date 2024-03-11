@@ -7,19 +7,15 @@ local pn = ToEnumShortString(player)
 
 -- Height and width of the density graph.
 local height = 64
-local width = IsUsingWideScreen() and 286 or 276
+local width = _screen.w/3.195
 
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:visible( GAMESTATE:IsHumanPlayer(player) )
-		self:xy(_screen.cx-182, _screen.cy+23)
+		self:xy(_screen.cx-293, _screen.cy+56)
 
 		if player == PLAYER_2 then
-			self:addy(height+24)
-		end
-
-		if IsUsingWideScreen() then
-			self:addx(-5)
+			self:x(_screen.cx+293)
 		end
 	end,
 	PlayerJoinedMessageCommand=function(self, params)
@@ -151,16 +147,7 @@ af2[#af2+1] = Def.ActorFrame{
 	Name="Breakdown",
 	InitCommand=function(self)
 		local actorHeight = 17
-		self:addy(height/2 - actorHeight/2)
-	end,
-	HideCommand=function(self)
-		self:visible(false)
-	end,
-	RedrawCommand=function(self)
-		self:visible(true)
-	end,
-	TogglePatternInfoCommand=function(self)
-		self:visible(not self:GetVisible())
+		self:addy(height/2 - actorHeight/2 + 22)
 	end,
 	Def.Quad{
 		InitCommand=function(self)
@@ -173,15 +160,16 @@ af2[#af2+1] = Def.ActorFrame{
 		Text="",
 		Name="BreakdownText",
 		InitCommand=function(self)
-			local textZoom = 0.8
+			local textHeight = 17
+			local textZoom = 0.65
 			self:maxwidth(width/textZoom):zoom(textZoom)
 		end,
 		HideCommand=function(self)
 			self:settext("")
 		end,
 		RedrawCommand=function(self)
-			local textZoom = 0.8
-			self:settext(GenerateBreakdownText(pn, 0))
+			local textZoom = 0.7
+			self:settext("Breakdown: " .. GenerateBreakdownText(pn, 0))
 			local minimization_level = 1
 			while self:GetWidth() > (width/textZoom) and minimization_level < 4 do
 				self:settext(GenerateBreakdownText(pn, minimization_level))
@@ -194,55 +182,47 @@ af2[#af2+1] = Def.ActorFrame{
 af2[#af2+1] = Def.ActorFrame{
 	Name="PatternInfo",
 	InitCommand=function(self)
-		if GAMESTATE:GetNumSidesJoined() == 2 then
-			self:y(0)
-		else
-			self:y(88 * (player == PLAYER_1 and 1 or -1))
-		end
-		self:visible(GAMESTATE:GetNumSidesJoined() == 1)
+		self:addy(90)
 	end,
-	PlayerJoinedMessageCommand=function(self, params)
-		self:visible(GAMESTATE:GetNumSidesJoined() == 1)
-		if GAMESTATE:GetNumSidesJoined() == 2 then
-			self:y(0)
-		else
-			self:y(88 * (player == PLAYER_1 and 1 or -1))
-		end
-	end,
-	PlayerUnjoinedMessageCommand=function(self, params)
-		self:visible(GAMESTATE:GetNumSidesJoined() == 1)
-		if GAMESTATE:GetNumSidesJoined() == 2 then
-			self:y(0)
-		else
-			self:y(88 * (player == PLAYER_1 and 1 or -1))
-		end
-	end,
-	TogglePatternInfoCommand=function(self)
-		self:visible(not self:GetVisible())
-	end,
-	
-	-- Background for the additional chart info.
-	-- Only shown in 1 Player mode
-	Def.Quad{
-		InitCommand=function(self)
-			self:diffuse(color("#1e282f")):zoomto(width, height)
-			if ThemePrefs.Get("VisualStyle") == "Technique" then
-				self:diffusealpha(0.5)
-			end
-		end,
-	}
 }
 
 local af3 = af2[#af2]
 
 local layout = {
-	{"Crossovers", "Footswitches"},
-	{"Sideswitches", "Jacks"},
-	{"Brackets", "Total Stream"},
+	{"Crossovers"},
+ 	{"Sideswitches"},
+ 	{"Footswitches"},
+ 	{"Jacks"},
+ 	{"Brackets"}
+}
+
+af3[#af3+1] = LoadFont("Common normal")..{
+	Text="",
+	Name="Total Stream",
+	InitCommand=function(self)
+		local textHeight = 17
+		local textZoom = 0.65
+		self:zoom(textZoom):horizalign(center)
+		self:maxwidth(width/textZoom)
+		self:y(-height/2 - 6)
+		-- self:diffuse(Color.Black)
+	end,
+	HideCommand=function(self)
+		self:settext("")
+	end,
+	RedrawCommand=function(self)
+		local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
+		local totalMeasures = streamMeasures + breakMeasures
+		if streamMeasures == 0 then
+			self:settext(("   Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate))
+		else
+			self:settext("Total Stream: " .. string.format("%d/%d (%0.1f%%)", streamMeasures, totalMeasures, streamMeasures/totalMeasures*100) .. ("   Peak NPS: %.1f   "):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate))
+		end
+	end
 }
 
 local colSpacing = 150
-local rowSpacing = 20
+local rowSpacing = 15
 
 for i, row in ipairs(layout) do
 	for j, col in pairs(row) do
@@ -251,14 +231,15 @@ for i, row in ipairs(layout) do
 			Name=col .. "Value",
 			InitCommand=function(self)
 				local textHeight = 17
-				local textZoom = 0.8
+				local textZoom = 0.7
 				self:zoom(textZoom):horizalign(right)
 				if col == "Total Stream" then
-					self:maxwidth(100)
+					self:maxwidth(300)
 				end
-				self:xy(-width/2 + 40, -height/2 + 13)
+				self:xy(-width/2 + 105, -height/2 + 10)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
+				self:diffuse(Color.Black)
 			end,
 			HideCommand=function(self)
 				if col ~= "Total Stream" then
@@ -287,11 +268,12 @@ for i, row in ipairs(layout) do
 			Name=col,
 			InitCommand=function(self)
 				local textHeight = 17
-				local textZoom = 0.8
+				local textZoom = 0.7
 				self:maxwidth(width/textZoom):zoom(textZoom):horizalign(left)
-				self:xy(-width/2 + 50, -height/2 + 13)
+				self:xy(-width/2 + 108, -height/2 + 10)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
+				self:diffuse(Color.Black)
 			end,
 		}
 

@@ -18,16 +18,13 @@ local af = Def.ActorFrame{
 
 	-- MenuTimer code for preserving SSM's timer value when going
 	-- from SSM to Player Options and then back to SSM
-	LoadActor("./PreserveMenuTimer.lua"),
+	LoadActor("../ScreenSelectMusic overlay/PreserveMenuTimer.lua"),
 	-- Apply player modifiers from profile
-	LoadActor("./PlayerModifiers.lua"),
+	LoadActor("../ScreenSelectMusic overlay/PlayerModifiers.lua"),
 
 	-- ---------------------------------------------------
 	-- next, load visual elements; the order of these matters
 	-- i.e. content in PerPlayer/Over needs to draw on top of content from PerPlayer/Under
-
-	-- make the MusicWheel appear to cascade down; this should draw underneath P2's PaneDisplay
-	LoadActor("./MusicWheelAnimation.lua"),
 
 	-- number of steps, jumps, holds, etc., and high scores associated with the current stepchart
 	LoadActor("./PaneDisplay.lua"),
@@ -45,19 +42,19 @@ local af = Def.ActorFrame{
 
 	-- ---------------------------------------------------
 	-- finally, load the overlay used for sorting the MusicWheel (and more), hidden by default
-	LoadActor("./SortMenu/default.lua"),
+	LoadActor("../ScreenSelectMusic overlay/SortMenu/default.lua"),
 	-- a Test Input overlay can (maybe) be accessed from the SortMenu
-	LoadActor("./TestInput.lua"),
+	LoadActor("../ScreenSelectMusic overlay/TestInput.lua"),
 
 	-- The GrooveStats leaderboard that can (maybe) be accessed from the SortMenu
 	-- This is only added in "dance" mode and if the service is available.
-	LoadActor("./Leaderboard.lua"),
+	LoadActor("../ScreenSelectMusic overlay/Leaderboard.lua"),
 
 	-- a yes/no prompt overlay for backing out of SelectMusic when in EventMode can be
 	-- activated via "CodeEscapeFromEventMode" under [ScreenSelectMusic] in Metrics.ini
-	LoadActor("./EscapeFromEventMode.lua"),
+	LoadActor("../ScreenSelectMusic overlay/EscapeFromEventMode.lua"),
 
-	LoadActor("./SongSearch/default.lua"),
+	LoadActor("../ScreenSelectMusic overlay/SongSearch/default.lua"),
 }
 
 return af
