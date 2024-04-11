@@ -17,6 +17,9 @@ t[#t+1] = LoadActor(THEME:GetPathG("", "_grades/"..grade..".lua"), playerStats).
 	InitCommand=function(self)
 		self:x(70 * (player==PLAYER_1 and -1 or 1))
 		self:y(_screen.cy-134)
+		if ThemePrefs.Get("RainbowMode") then
+			self:shadowlength(3)
+		end
 	end,
 	OnCommand=function(self) self:zoom(0.4) end
 }
