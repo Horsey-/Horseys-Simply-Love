@@ -112,7 +112,11 @@ local Overrides = {
 			--
 			-- Keeping the option, while making it the functionality more opaque, I think is better QOL where players
 			-- in a tournament can keep everything on CMod and it'll auto-convert to MMod as needed.
-			return { "X", "C", "M", "A" }
+			if IsOutFox() then
+				return { "X", "C", "M", "A" }
+			else
+				return { "X", "C", "M" }
+			end
 		end,
 		ExportOnChange = true,
 		LayoutType = "ShowOneInRow",
