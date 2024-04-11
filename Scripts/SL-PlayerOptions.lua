@@ -112,7 +112,7 @@ local Overrides = {
 			--
 			-- Keeping the option, while making it the functionality more opaque, I think is better QOL where players
 			-- in a tournament can keep everything on CMod and it'll auto-convert to MMod as needed.
-			return { "X", "C", "M" }
+			return { "X", "C", "M", "A" }
 		end,
 		ExportOnChange = true,
 		LayoutType = "ShowOneInRow",
