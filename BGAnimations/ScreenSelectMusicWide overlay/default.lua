@@ -11,6 +11,10 @@ local af = Def.ActorFrame{
 		-- the preselected music rate.
 		local songOptions = GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred")
 		songOptions:MusicRate(SL.Global.ActiveModifiers.MusicRate)
+
+		-- here we're going to set the preferred song of the music wheel when [no player profile is loaded] or [a player profile is loaded and does not have a preferred song]
+		-- see 06 SL-Utilities.lua for function definitions
+		SetPreferredSong()
 	end,
 
 	--Joining a new player to ScreenSelectMusicWide is going to be janky because the best way to go about it would be to fade out the first joined player's UI

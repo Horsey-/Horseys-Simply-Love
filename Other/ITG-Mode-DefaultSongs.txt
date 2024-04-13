@@ -1,0 +1,8 @@
+#Syntax is as follows:
+#Pack Name/Song Folder Name
+#do not use the chart's "#TITLE", use the folder name
+
+In The Groove 2/Birdie
+In The Groove 2/Bumble Bee
+In The Groove 3/Dance Vibrations
+In The Groove 3/Coming Out

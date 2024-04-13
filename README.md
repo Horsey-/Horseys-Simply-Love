@@ -107,3 +107,20 @@ Completely reworked ScreenSelectMusic; this screen is no longer very lopsided in
 
 - USB profiles are untested because I don't use them but probably work just fine.
    </details>
+
+ ✅ Define default songs in ITG Mode (the same way it's done in Casual Mode) via "~/Other/ITG-Mode-DefaultSongs.txt"
+
+<details>
+  <summary>Click to expand for details ⬇️</summary>
+
+Upstream has a feature in which you can define the default song that the song wheel will default to when no preferred song is set (in Casual Mode). This theme expands that to ITG Mode as well. If more than one default song is defined in "Other/ITG-Mode-DefaultSongs.txt", one song will be selected at random each time the music wheel is loaded (for the first song in a set) with no preferred song set. Starting a set with no preferred song set occurs when: all players are using the guest profile, no player is using a profile at all, when the last song played has been removed from an existing profile, all defined preferred songs are not found, and when loading a new profile for the first time. If one player has no preferred song, a second player with a valid preferred song will take precedence (this is the current upstream behaviour).
+
+The file where you define these default songs is located here:
+~/Other/ITG-Mode-DefaultSongs.txt
+
+There is no official definition in the parsing function to ignore lines starting with '#', but since lines that don't point to a valid directory are ignored, it's safe to comment out lines with '#'. 
+
+When defining a song in the aforementioned file, use a newline for each entry. Use the filesystem name for the pack/song folder exactly as it appears on the filesystem. Do not use the chart's '#TITLE', use the song's folder name to define a song.
+
+See ~/Other/ITG-Mode-DefaultSongs.txt for examples.
+   </details>

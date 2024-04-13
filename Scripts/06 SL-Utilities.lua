@@ -188,3 +188,75 @@ function GetGroupBanner()
  function HasGroupBanner()
  	return GetGroupBanner() ~= '';
  end
+
+--  function used to randomly select one table entry
+ function shuffle(tbl)
+    for i = #tbl, 2, -1 do
+      local j = math.random(i)
+      tbl[i], tbl[j] = tbl[j], tbl[i]
+    end
+    return tbl
+  end
+
+  ---------------------------------------------------------------------------
+-- helper function used by GetGroups() and GetDefaultSong() for Casual Mode in 'Setup.lua'
+-- also used to parse ITG-Mode-DefaultSongs.txt
+-- returns the contents of a txt file as an indexed table, split on newline
+
+GetFileContents = function(path)
+	local contents = ""
+
+	if FILEMAN:DoesFileExist(path) then
+		-- create a generic RageFile that we'll use to read the contents
+		local file = RageFileUtil.CreateRageFile()
+		-- the second argument here (the 1) signifies
+		-- that we are opening the file in read-only mode
+		if file:Open(path, 1) then
+			contents = file:Read()
+		end
+
+		-- destroy the generic RageFile now that we have the contents
+		file:destroy()
+	end
+
+	-- split the contents of the file on newline
+	-- to create a table of lines as strings
+	local lines = {}
+	for line in contents:gmatch("[^\r\n]+") do
+		lines[#lines+1] = line
+	end
+
+	return lines
+end
+
+-- used to set the preferred song based on a list in ~/Other/ITG-Mode-DefaultSongs.txt
+-- the Music Wheel will default to a random song listed in the above file (if found) if no valid player profiles are loaded
+-- in the case that player profiles are loaded that have a last song played, the Music Wheel will default to the last played song
+function SetPreferredSong()
+	if GAMESTATE:GetCurrentStageIndex() == 0 then
+		local lastPlayed = false
+		for i,pn in ipairs(GAMESTATE:GetHumanPlayers()) do
+			local prof = PROFILEMAN:GetProfile(pn)
+			song = prof:GetLastPlayedSong()
+			if song ~= nil then
+					lastPlayed = true
+			end
+		end
+	
+		if not lastPlayed then
+	
+			local path = THEME:GetCurrentThemeDirectory() .. "Other/ITG-Mode-DefaultSongs.txt"
+			local song_list = shuffle(GetFileContents(path))
+	
+			for _, song in ipairs(song_list) do
+				local s = SONGMAN:FindSong( song )
+				if s ~= nil then
+					GAMESTATE:SetPreferredSong( s )
+					-- prints the randomly selected song ID; used for debugging
+					-- SM(s)
+					break;
+				end
+			end
+		end
+	end
+end

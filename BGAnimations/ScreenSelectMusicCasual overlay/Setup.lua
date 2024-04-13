@@ -70,34 +70,7 @@ local InitOptionRowsForSingleSong = function()
 end
 
 ---------------------------------------------------------------------------
--- helper function used by GetGroups() and GetDefaultSong()
--- returns the contents of a txt file as an indexed table, split on newline
-
-local GetFileContents = function(path)
-	local contents = ""
-
-	if FILEMAN:DoesFileExist(path) then
-		-- create a generic RageFile that we'll use to read the contents
-		local file = RageFileUtil.CreateRageFile()
-		-- the second argument here (the 1) signifies
-		-- that we are opening the file in read-only mode
-		if file:Open(path, 1) then
-			contents = file:Read()
-		end
-
-		-- destroy the generic RageFile now that we have the contents
-		file:destroy()
-	end
-
-	-- split the contents of the file on newline
-	-- to create a table of lines as strings
-	local lines = {}
-	for line in contents:gmatch("[^\r\n]+") do
-		lines[#lines+1] = line
-	end
-
-	return lines
-end
+-- move GetFileContents() to 06 SL-Utilities.lua because it's more useful as a global function
 
 ---------------------------------------------------------------------------
 -- provided a group title as a string, prune out songs that don't have valid steps
