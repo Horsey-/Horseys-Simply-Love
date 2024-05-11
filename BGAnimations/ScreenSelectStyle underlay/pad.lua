@@ -19,6 +19,8 @@ end
 local layouts = {
 	dance    = { false, true,  false, true,  false, true,  false, true,  false },
 	pump     = { true,  false, true,  false, true,  false, true,  false, true  },
+	smx      = { false, true,  false, true,  true,  true,  false, true,  false },
+	double6  = { false, false, false, true,  true,  true,  false, false, false },
 	techno   = { true,  true,  true,  true,  false, true,  true,  true,  true  },
 	solo     = { true,  true,  true,  true,  false, true,  false, true,  false },
 	inactive = { false, false, false, false, false, false, false, false, false }
@@ -41,9 +43,14 @@ for row=0,2 do
 				layout = layouts.solo
 			end
 
+			if game=="smx" and style=="double6" then
+				layout = layouts.double6
+			end
+
+
 			if  params and params.Player
 			and not GAMESTATE:IsHumanPlayer(params.Player)
-			and style ~= "double"
+			and (style ~= "double" and style ~= "double6" and style ~= "double10")
 			then
 				layout = layouts.inactive
 			end

@@ -119,6 +119,7 @@ CurrentGameIsSupported = function()
 	local support = {
 		dance  = true,
 		pump   = true,
+		smx    = true;
 		techno = true,
 		para   = true,
 		kb7    = true
