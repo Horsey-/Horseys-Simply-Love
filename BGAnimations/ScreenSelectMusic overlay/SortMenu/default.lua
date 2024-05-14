@@ -265,9 +265,18 @@ local t = Def.ActorFrame {
 		-- but only present these options if Joint Double or Joint Premium is enabled
 		if not (PREFSMAN:GetPreference("Premium") == "Premium_Off" and GAMESTATE:GetCoinMode() == "CoinMode_Pay") then
 			if style == "single" then
-				table.insert(wheel_options, {"ChangeStyle", "Double"})
-				if ThemePrefs.Get("AllowDanceSolo") then
-					table.insert(wheel_options, {"ChangeStyle", "Solo"})
+				if GAMESTATE:GetCurrentGame():GetName() ~= "smx" then
+
+					table.insert(wheel_options, {"ChangeStyle", "Double"})
+					if ThemePrefs.Get("AllowDanceSolo") then
+						table.insert(wheel_options, {"ChangeStyle", "Solo"})
+					end
+					
+				end
+				if GAMESTATE:GetCurrentGame():GetName() == "smx" then
+
+					table.insert(wheel_options, {"ChangeStyle", "Double6"})
+					table.insert(wheel_options, {"ChangeStyle", "Double10"})
 				end
 			elseif style == "double" then
 				table.insert(wheel_options, {"ChangeStyle", "Single"})
@@ -276,7 +285,15 @@ local t = Def.ActorFrame {
 				end
 			elseif style == "solo" then
 				table.insert(wheel_options, {"ChangeStyle", "Single"})
-				table.insert(wheel_options, {"ChangeStyle", "Double"})
+				table.insert(wheel_options, {"ChangeStyle", "Double"})			
+			-- smx 6 panel
+			elseif style == "double6" then
+				table.insert(wheel_options, {"ChangeStyle", "Single"})
+				table.insert(wheel_options, {"ChangeStyle", "Double10"})
+			-- smx 10 panel
+			elseif style == "double10" then
+				table.insert(wheel_options, {"ChangeStyle", "Single"})
+				table.insert(wheel_options, {"ChangeStyle", "Double6"})
 			-- Routine is not ready for use yet, but it might be soon.
 			-- This can be uncommented at that time to allow switching from versus into routine.
 			-- elseif style == "versus" then
@@ -298,7 +315,7 @@ local t = Def.ActorFrame {
 		-- allow players to switch to a TestInput overlay if the current game has visual assets to support it
 		-- and if we're in EventMode (public arcades probably don't want random players attempting to diagnose the pads...)
 		local game = GAMESTATE:GetCurrentGame():GetName()
-		if (game=="dance" or game=="pump" or game=="techno") and GAMESTATE:IsEventMode() then
+		if (game=="dance" or game=="pump" or game=="smx" or game=="techno") and GAMESTATE:IsEventMode() then
 			table.insert(wheel_options, {"FeelingSalty", "TestInput"})
 		end
 		-- The relevant Leaderboard.lua actor is only added if these same conditions are met.

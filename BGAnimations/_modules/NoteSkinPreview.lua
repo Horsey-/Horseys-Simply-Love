@@ -18,7 +18,7 @@ local dummy = Def.Actor{
 if not NOTESKIN:DoesNoteSkinExist(noteskin_name) then return dummy end
 
 local game_name = GAMESTATE:GetCurrentGame():GetName()
-local fallback_column = { dance="Up", pump="UpRight", techno="Up", kb7="Key1" }
+local fallback_column = { dance="Up", pump="UpRight", smx="Up", techno="Up", kb7="Key1" }
 
 -- prefer the value for column if one was passed in, otherwise use a fallback value
 local column = args.column or fallback_column[game_name] or "Up"
