@@ -80,7 +80,7 @@ return Def.ActorFrame{
 		-- increment the marquee_index, and keep it in bounds
 		marquee_index = (marquee_index % #info) + 1
 		-- retrieve the text we want to display
-		local text = info[marquee_index]
+		local text = GAMESTATE:GetCurrentSteps(player):IsAutogen() and THEME:GetString("ScreenSelectMusic", "AUTOGEN") or info[marquee_index]
 
 		-- set this BitmapText actor to display that text
 		self:settext( text )
