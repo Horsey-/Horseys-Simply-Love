@@ -244,11 +244,7 @@ for i, row in ipairs(layout) do
 				self:addy((i-1)*rowSpacing)
 			end,
 			HideCommand=function(self)
-				if col ~= "Total Stream" then
-					self:settext("0")
-				else
-					self:settext("None (0.0%)")
-				end
+				self:settext("?")
 			end,
 			RedrawCommand=function(self)
 				if GAMESTATE:GetCurrentSteps(player):IsAutogen() then
