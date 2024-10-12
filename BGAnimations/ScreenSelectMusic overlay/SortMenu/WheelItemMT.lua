@@ -16,7 +16,7 @@ return {
 
 			-- top text
 			af[#af+1] = Def.BitmapText{
-				Font="Common Normal",
+				Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 				InitCommand=function(subself)
 					self.top_text = subself
 					subself:zoom(1.15):y(-15):diffusealpha(0)
@@ -28,7 +28,7 @@ return {
 
 			-- bottom text
 			af[#af+1] = Def.BitmapText{
-				Font="Common Bold",
+				Font=ThemePrefs.Get("ThemeFont") .. " Bold",
 				InitCommand=function(subself)
 					self.bottom_text = subself
 					subself:zoom(0.85):y(10):diffusealpha(0):maxwidth(405)

@@ -24,7 +24,7 @@ SL_CustomPrefs.Get = function()
 	local day = DayOfMonth()
 	local today = year * 10000 + month * 100 + day
 
-	if today >= 20230620 then
+	if today >= 20230619 then
 		visualStyleChoices[#visualStyleChoices+1] = "😈"
 		visualStyleValues[#visualStyleValues+1] = "SRPG8"
 	else
@@ -298,6 +298,73 @@ SL_CustomPrefs.Get = function()
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values  = { true, false }
 		},
+
+		-- - - - - - - - - - - - - - - - - - - -
+		-- new Zmod stuff
+		-- - - - - - - - - - - - - - - - - - - -
+		EnableBoogieStats = {
+			Default = false,
+			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
+			Values  = { true, false }
+		},
+		
+		CloseFolderCodes = {
+			Default = "None",
+			Choices = { "None", "Up-Down", "Down-Up", "Select-MenuUp" },
+			Values = { "Off", "CloseFolder1", "CloseFolder2", "CloseFolder3" },
+		},
+
+		ThemeFont = {
+			Default = "Common",
+			Choices = { THEME:GetString("ThemePrefs","Wendy"), THEME:GetString("ThemePrefs", "Mega"), THEME:GetString("ThemePrefs", "Unprofessional") },
+			Values = { "Common", "Mega", "Unprofessional" }
+		},
+		MusicWheelGS =
+		{
+			Default = "Scorebox",
+			Choices = { "Scorebox", "Pane", "Off" }
+		},
+		FolderStats =
+		{
+			Default = true,
+			Choices = { THEME:GetString("ThemePrefs", "Show"), THEME:GetString("ThemePrefs", "Hide") },
+			Values  = { true, false }
+		},
+		ITGDiffColors =
+		{
+			Default = "Simply Love",
+			Choices = { "Simply Love", "ITG", "DDR" }
+		},
+		AnimateBanners =
+		{
+			Default = true,
+			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
+			Values  = { true, false }
+		},
+		SongSelectBG =
+		{
+			Default = "Off",
+			Choices = { THEME:GetString("ThemePrefs", "Off"), THEME:GetString("ThemePrefs", "Banner"), THEME:GetString("ThemePrefs", "BG") },
+			Values = { "Off", "Banner", "BG" }
+		},
+		ResultsBG =
+		{
+			Default = false,
+			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
+			Values = { true, false }
+		},
+		OutlineGrade =
+		{
+			Default = false,
+			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
+			Values = { true, false }
+		},
+		GradeCombo =
+		{
+			Default = false,
+			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
+			Values = { true, false }
+		}
 	}
 end
 

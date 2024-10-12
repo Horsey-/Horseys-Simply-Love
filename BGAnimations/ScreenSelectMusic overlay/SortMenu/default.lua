@@ -103,7 +103,10 @@ local SongSearchSettings = {
 		if songName then
 			FilterTable(candidates, function(song)
 				return (song:GetDisplayFullTitle():lower():find(songName) ~= nil or
-						song:GetTranslitFullTitle():lower():find(songName) ~= nil)
+						song:GetTranslitFullTitle():lower():find(songName) ~= nil or
+						song:GetDisplayArtist():lower():find(songName) ~= nil or
+						song:GetTranslitArtist():lower():find(songName) ~= nil
+					)
 			end)
 		end
 
@@ -199,7 +202,7 @@ local t = Def.ActorFrame {
 			SCREENMAN:set_input_redirected(player, true)
 		end
 		self:playcommand("HideSortMenu")
-		
+
 		overlay:playcommand("ShowTestInput")
 	end,
 	DirectInputToLeaderboardCommand=function(self)
@@ -211,7 +214,7 @@ local t = Def.ActorFrame {
 			SCREENMAN:set_input_redirected(player, true)
 		end
 		self:playcommand("HideSortMenu")
-		
+
 		overlay:playcommand("ShowLeaderboard")
 	end,
 	-- this returns input back to the engine and its ScreenSelectMusic
@@ -370,7 +373,7 @@ local t = Def.ActorFrame {
 	},
 	-- "Options" text
 	Def.BitmapText{
-		Font="Common Bold",
+		Font=ThemePrefs.Get("ThemeFont") .. " Bold",
 		Text=ScreenString("Options"),
 		InitCommand=function(self)
 			self:xy(_screen.cx, _screen.cy-92):zoom(0.4)
@@ -395,7 +398,7 @@ local t = Def.ActorFrame {
 	},
 	-- "Press SELECT To Cancel" text
 	Def.BitmapText{
-		Font="Common Bold",
+		Font=ThemePrefs.Get("ThemeFont") .. " Bold",
 		Text=ScreenString("Cancel"),
 		InitCommand=function(self)
 			if PREFSMAN:GetPreference("ThreeKeyNavigation") then

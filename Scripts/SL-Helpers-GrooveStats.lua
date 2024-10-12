@@ -1,3 +1,20 @@
+GrooveStatsURL = function()
+	-- For test GrooveStats responses, create a file called GrooveStats_UAT.txt
+	-- in your theme's Other directory. To toggle between live and UAT, delete/rename this file.
+	-- Requires gsapi-mock and adding 127.0.0.1 to HttpAllowHosts in Preferences.ini
+	local url_prefix
+	local dir = THEME:GetCurrentThemeDirectory() .. "Other/"
+	local uat = dir .. "GrooveStats_UAT.txt"
+	local boogie = ThemePrefs.Get("EnableBoogieStats")
+	if not FILEMAN:DoesFileExist(uat) then 
+		if boogie and string.find(PREFSMAN:GetPreference("HttpAllowHosts"), "boogiestats.andr.host") then url_prefix = "https://boogiestats.andr.host/" 
+		else url_prefix = "https://api.groovestats.com/" end
+	else
+		url_prefix = "http://127.0.0.1:5000/"
+	end
+	return url_prefix
+end
+
 -- -----------------------------------------------------------------------
 -- Returns an actor that can write a request, wait for its response, and then
 -- perform some action. This actor will only wait for one response at a time.
@@ -41,7 +58,7 @@
 -- args: any, arguments that will be made accesible to the callback function. This
 --       can of any type as long as the callback knows what to do with it.
 RequestResponseActor = function(x, y)
-	local url_prefix = "https://api.groovestats.com/"
+	local url_prefix = GrooveStatsURL()
 
 	return Def.ActorFrame{
 		InitCommand=function(self)
@@ -95,8 +112,8 @@ RequestResponseActor = function(x, y)
 				method=method,
 				body=body,
 				headers=headers,
-				connectTimeout=timeout/2,
-				transferTimeout=timeout/2,
+				connectTimeout=timeout,
+				transferTimeout=timeout,
 				onResponse=function(response)
 					self.request_handler = nil
 					-- If we get a permanent error, make sure we "disconnect" from
@@ -160,7 +177,7 @@ RequestResponseActor = function(x, y)
 					self:diffuse(GetHexColor(SL.Global.ActiveColorIndex, true))
 				end
 			},
-			LoadFont("Common Normal")..{
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				InitCommand=function(self)
 					self:zoom(0.9)
 					-- Leaderboard should be white since it's on a black background.
@@ -482,7 +499,12 @@ CreateCommentString = function(player)
 
 	local suffixes = {"w", "e", "g", "d", "wo"}
 
-	local comment = SL.Global.GameMode == "FA+" and "FA+" or ""
+	local comment = (SL.Global.GameMode == "FA+" or SL[pn].ActiveModifiers.ShowFaPlusWindow) and "FA+" or ""
+	
+	-- Show EX score for FA+ play
+	if SL.Global.GameMode == "FA+" or (SL.Global.GameMode == "ITG" and SL[pn].ActiveModifiers.ShowFaPlusWindow) then
+		comment = comment .. ", " .. ("%.2f"):format(CalculateExScore(player, GetExJudgmentCounts(player))) .. "EX"
+	end
 
 	local rate = SL.Global.ActiveModifiers.MusicRate
 	if rate ~= 1 then
@@ -492,20 +514,43 @@ CreateCommentString = function(player)
 		comment = comment..("%gx Rate"):format(rate)
 	end
 
-	-- Ignore the top window in all cases.
-	for i=2, 6 do
-		local idx = SL.Global.GameMode == "FA+" and i-1 or i
-		local suffix = i == 6 and "m" or suffixes[idx]
-		local tns = i == 6 and "TapNoteScore_Miss" or "TapNoteScore_W"..i
+	-- Get EX judgment counts if playing with FA+ windows enabled in ITG mode
+	if SL.Global.GameMode == "ITG" then
+		local counts = GetExJudgmentCounts(player)
+		local types = { 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss' }
 		
-		local number = pss:GetTapNoteScores(tns)
-
-		-- If the windows are disabled, then the number will be 0.
-		if number ~= 0 then
-			if #comment ~= 0 then
-				comment = comment .. ", "
+		for i=1,6 do
+			local window = types[i]
+			local number = counts[window] or 0
+			local suffix = i == 6 and "m" or suffixes[i]
+			
+			if i == 1 then
+				number = counts["W1"]
 			end
-			comment = comment..number..suffix
+			
+			if number ~= 0 then
+				if #comment ~= 0 then
+					comment = comment .. ", "
+				end
+				comment = comment..number..suffix
+			end
+		end
+	else
+		-- Ignore the top window in all cases.
+		for i=2, 6 do
+			local idx = SL.Global.GameMode == "FA+" and i-1 or i
+			local suffix = i == 6 and "m" or suffixes[idx]
+			local tns = i == 6 and "TapNoteScore_Miss" or "TapNoteScore_W"..i
+			
+			local number = pss:GetTapNoteScores(tns)
+
+			-- If the windows are disabled, then the number will be 0.
+			if number ~= 0 then
+				if #comment ~= 0 then
+					comment = comment .. ", "
+				end
+				comment = comment..number..suffix
+			end
 		end
 	end
 

@@ -4,7 +4,7 @@ local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 local ShouldDisplayStatsForPlayer = function(player)
     local pn = ToEnumShortString(player)
     return (SL[pn].ActiveModifiers.DataVisualizations == "Step Statistics" or
-            ThemePrefs.Get("EnableTournamentMode") and ThemePrefs.Get("StepStats") == "Show")
+            (ThemePrefs.Get("EnableTournamentMode") and ThemePrefs.Get("StepStats") == "Show"))
 end
 
 local ShouldDisplayStats = function()
@@ -79,8 +79,9 @@ for player in ivalues(Players) do
         if SL[ToEnumShortString(player)].ActiveModifiers.NPSGraphAtTop or ThemePrefs.Get("EnableTournamentMode") then
             local pn = ToEnumShortString(player)
             local IsEX = SL[pn].ActiveModifiers.ShowEXScore
+            if ThemePrefs.Get("TournamentMode") ~= "Off" then IsEX = ThemePrefs.Get("TournamentMode") == "EX" and true or false end
 
-            af[#af+1] = LoadFont("Wendy/_wendy monospace numbers")..{
+            af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " numbers")..{
                 Text="0.00",
                 InitCommand=function(self)
                     self:valign(1):horizalign(right)
@@ -125,6 +126,17 @@ af[#af+1] = Def.Banner{
     CurrentSongChangedMessageCommand=function(self)
 		self:LoadFromSong( GAMESTATE:GetCurrentSong() )
 		self:setsize(418,164):zoom(0.3):addy(70)
+		self:SetDecodeMovie(ThemePrefs.Get("AnimateBanners"))
+    end
+}
+af[#af+1] = Def.Banner{
+    CurrentSongChangedMessageCommand=function(self)
+		if GAMESTATE:IsCourseMode() then
+			self:LoadFromCourse( GAMESTATE:GetCurrentCourse() )
+		else
+			self:LoadFromSongGroup( GAMESTATE:GetCurrentSong():GetGroupName() )
+		end
+		self:setsize(418,164):zoom(0.25):addy(125)
     end
 }
 

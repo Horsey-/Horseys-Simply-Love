@@ -1,5 +1,5 @@
 local Players = GAMESTATE:GetHumanPlayers()
-local NumPanes = SL.Global.GameMode=="Casual" and 1 or 8
+local NumPanes = SL.Global.GameMode=="Casual" and 1 or 10
 
 local InputHandler = nil
 local EventOverlayInputHandler = nil
@@ -48,6 +48,12 @@ end
 -- code for triggering a screenshot and animating a "screenshot" texture
 t[#t+1] = LoadActor("./Shared/ScreenshotHandler.lua")
 
+-- code for immediately retrying the song that was just played
+t[#t+1] = LoadActor("./Shared/RestartHandler.lua")
+
+-- song background
+t[#t+1] = LoadActor("./Shared/Background.lua")
+
 -- the title of the song and its graphical banner, if there is one
 t[#t+1] = LoadActor("./Shared/TitleAndBanner.lua")
 
@@ -79,9 +85,18 @@ for player in ivalues(Players) do
 	-- judgment scatterplot, modifier list, disqualified text
 	t[#t+1] = LoadActor("./PerPlayer/Lower/default.lua", player)
 
+	-- Save Ghost Data if player has improved their score
+	t[#t+1] = LoadActor("./PerPlayer/SaveGhostData.lua", player)
+
 	-- Generate the .itl file for the player.
 	-- When the event isn't active, this actor is nil.
 	t[#t+1] = LoadActor("./PerPlayer/ItlFile.lua", player)
+
+	-- Generate the .rpg file for the player to keep track of best rate mod on the songwheel
+	-- When the event isn't active, this actor is nil.
+	t[#t+1] = LoadActor("./PerPlayer/RpgRatemod.lua", player)
+	
+	
 end
 
 -- -----------------------------------------------------------------------

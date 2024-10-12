@@ -1,4 +1,5 @@
 local sort_wheel = ...
+
 -- this handles user input while in the SortMenu
 local input = function(event)
 	if not (event and event.PlayerNumber and event.button) then
@@ -117,7 +118,6 @@ local input = function(event)
 					else
 						SM("No Favorites Available")
 					end
-
 				end
 			end
 

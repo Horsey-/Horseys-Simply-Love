@@ -112,7 +112,7 @@ af[#af+1] = Def.Quad{ InitCommand=function(self) self:FullScreen():diffuse(0,0,0
 
 -- "Do you want to exit this game?" prompt
 af[#af+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=ScreenString("PromptBeforeExiting"),
 	InitCommand=function(self) self:zoom(1.3):xy(_screen.cx-((self:GetWidth()/2)*self:GetZoom()), _screen.cy-70):_wrapwidthpixels(text_width):align(0,0) end
 }
@@ -132,11 +132,11 @@ local no = Def.ActorFrame{
 		self:y(250):diffuse( PlayerColor(PLAYER_2) )
 	end,
 
-	LoadFont("Common Bold")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 		Text=THEME:GetString("ScreenPromptToResetPreferencesToStock","No"),
 		InitCommand=function(self) self:zoom(1.1) end
 	},
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Text=ScreenString("NoInfo"),
 		InitCommand=function(self) self:addy(30):zoom(0.825) end,
 	}
@@ -149,11 +149,11 @@ local yes = Def.ActorFrame{
 		self:y(250)
 	end,
 
-	LoadFont("Common Bold")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 		Text=THEME:GetString("ScreenPromptToResetPreferencesToStock","Yes"),
 		InitCommand=function(self) self:zoom(1.1) end
 	},
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Text=ScreenString("YesInfo"),
 		InitCommand=function(self) self:addy(30):zoom(0.825) end,
 	}

@@ -7,7 +7,36 @@ local NumPlayers = #GAMESTATE:GetHumanPlayers()
 local GraphWidth  = THEME:GetMetric("GraphDisplay", "BodyWidth")
 local GraphHeight = THEME:GetMetric("GraphDisplay", "BodyHeight")
 
+local function TotalCourseLength()
+    -- utility for graph stuff because i ended up doing this a lot
+    -- i use this method instead of TrailUtil.GetTotalSeconds because that leaves unused time at the end in graphs
+    local trail = GAMESTATE:GetCurrentTrail(player)
+    local t = 0
+    for te in ivalues(trail:GetTrailEntries()) do
+        t = t + te:GetSong():GetLastSecond()
+    end
+
+    return t / SL.Global.ActiveModifiers.MusicRate
+end
+
+local function TotalCourseLengthPlayed()
+	local trail = GAMESTATE:GetCurrentTrail(player)
+	local storage = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1]
+	if storage.DeathSecond ~= nil then
+		local deathSecond = storage.DeathSecond
+		local t = 0
+		for te in ivalues(trail:GetTrailEntries()) do
+			t = t + ( te:GetSong():GetLastSecond() / SL.Global.ActiveModifiers.MusicRate )
+			if t > deathSecond then break end
+		end
+		return t
+	else
+		return -1
+	end
+end
+
 local af = Def.ActorFrame{
+	Name="JudgeGraph",
 	InitCommand=function(self)
 		self:y(_screen.cy + 124)
 		if NumPlayers == 1 then
@@ -22,7 +51,7 @@ local af = Def.ActorFrame{
 		InitCommand=function(self)
 			self:zoomto(GraphWidth, GraphHeight):diffuse(color("#101519")):vertalign(top)
 			if ThemePrefs.Get("VisualStyle") == "Technique" then
-				self:diffusealpha(0.75)
+				self:diffusealpha(0.95)
 			end
 		end
 	},
@@ -39,6 +68,15 @@ if not GAMESTATE:IsCourseMode() then
 			-- Lower the opacity otherwise some of the scatter plot points might become hard to see.
 			self:diffusealpha(0.5)
 			self:queuecommand("Redraw")
+		end,
+	}
+else
+	af[#af+1] = NPS_Histogram_Static_Course(player, GraphWidth, GraphHeight, 0.5)..{
+		Name="DensityGraph",
+		OnCommand=function(self)
+			self:addx(-GraphWidth/2):addy(GraphHeight)
+			-- Lower the opacity otherwise some of the scatter plot points might become hard to see.
+			self:diffusealpha(0.5)
 		end,
 	}
 end
@@ -73,20 +111,23 @@ af[#af+1] = Def.GraphDisplay{
 			local offset = GraphWidth * offsetFactor
 			self:addx(offset/2)
 			self:SetWidth(GraphWidth - offset)
+		else
+			local duration = TotalCourseLength()
+			local liveDuration = TotalCourseLengthPlayed()
+
+			if liveDuration ~= -1 then
+				self:SetWidth(liveDuration / duration * GraphWidth):x(-GraphWidth/2):horizalign(left)
+			end
 		end
 
 		local playerStageStats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 		local stageStats = STATSMAN:GetCurStageStats()
+		
 		self:Set(stageStats, playerStageStats)
-
-		if GAMESTATE:IsCourseMode() then
-			-- hide the GraphDisplay's stroke ("Line")
-			self:GetChild("Line"):visible(false)
-		else
-			-- hide the GraphDisplay's body (2nd unnamed child)
-			self:GetChild("")[2]:visible(false)
-				self:GetChild("Line"):addy(1)
-		end
+		
+		-- hide the GraphDisplay's body (2nd unnamed child)
+		self:GetChild("")[2]:visible(false)
+		self:GetChild("Line"):addy(1)
 	end
 }
 
@@ -94,11 +135,12 @@ af[#af+1] = Def.Quad{
 	Name="ZeroLine",
 	InitCommand=function(self)
 		self:zoomto(GraphWidth,1)
-		self:y(GraphHeight/2)
+		self:y(GraphHeight/2+0.75)
 		self:diffusealpha(0.1)
 	end
 }
 
+local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 local storage = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1]
 
 if storage.DeathSecond ~= nil then
@@ -108,6 +150,12 @@ if storage.DeathSecond ~= nil then
 	local graphPercentage = storage.GraphPercentage
 	local graphLabel = storage.GraphLabel
 	local secondsLeft = seconds - deathSecond
+	
+	if GAMESTATE:IsCourseMode() then
+		local duration = TotalCourseLength()
+		local liveDuration = TotalCourseLengthPlayed()
+		graphPercentage = graphPercentage * liveDuration / duration
+	end
 
 	-- If the player failed, check how much time was remaining
 	af[#af+1] = Def.ActorFrame {
@@ -142,7 +190,7 @@ if storage.DeathSecond ~= nil then
 				end
 			},
 		},
-		LoadFont("Common Normal")..{
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			InitCommand=function(self)
 				self:zoom(0.5)
 				self:diffuse(Color.Red)
