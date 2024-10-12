@@ -688,6 +688,28 @@ local Overrides = {
 		end
 	},
 	-------------------------------------------------------------------------
+	--stolen from Mini()
+	ComboColor = {
+		Choices = function()
+			local first	= 0
+			local last 	= 100
+			local step 	= 20
+
+			return stringify( range(first, last, step), "%g%%")
+		end,
+		SaveSelections = function(self, list, pn)
+			local mods, playeroptions = GetModsAndPlayerOptions(pn)
+
+			for i=1,#self.Choices do
+				if list[i] then
+					mods.ComboColor = self.Choices[i]
+				end
+			end
+
+			playeroptions:ComboColor( mods.ComboColor:gsub("%%","")/100 )
+		end
+	},
+	-------------------------------------------------------------------------	
 	NoteFieldOffsetX = {
 		LayoutType = "ShowOneInRow",
 		ExportOnChange = true,

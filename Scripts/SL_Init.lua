@@ -45,6 +45,7 @@ local PlayerDefaults = {
 				ShowEXScore = false,
 				ShowFaPlusPane = true,
 
+				ComboColor = "20%",
 				NoteFieldOffsetX = 0,
 				NoteFieldOffsetY = 0,
 				Vocalization = "Random",
