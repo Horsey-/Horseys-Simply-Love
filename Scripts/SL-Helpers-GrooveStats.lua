@@ -7,7 +7,7 @@ GrooveStatsURL = function()
 	local uat = dir .. "GrooveStats_UAT.txt"
 	local boogie = ThemePrefs.Get("EnableBoogieStats")
 	if not FILEMAN:DoesFileExist(uat) then 
-		if boogie and string.find(PREFSMAN:GetPreference("HttpAllowHosts"), "boogiestats.andr.host") then url_prefix = "https://boogiestats.andr.host/" 
+		if boogie and string.find(PREFSMAN:GetPreference("NetworkAllowHosts"), "boogiestats.andr.host") then url_prefix = "https://boogiestats-staging.andr.host/" 
 		else url_prefix = "https://api.groovestats.com/" end
 	else
 		url_prefix = "http://127.0.0.1:5000/"
@@ -464,7 +464,7 @@ ValidForGrooveStats = function(player)
 	-- AutoPlay/AutoplayCPU is not allowed
 	valid[12] = IsHumanPlayer(player)
 
-	local minTNSToScoreNores = ToEnumShortString(PREFSMAN:GetPreference("MinTNSToScoreNotes"))
+	local minTNSToScoreNores = "W3" --ToEnumShortString(PREFSMAN:GetPreference("MinTNSToScoreNotes"))
 
 	if SL.Global.GameMode == "ITG" then
 		-- The cut off for rehits is only allowed to be set to Greats (W3) or worse.
