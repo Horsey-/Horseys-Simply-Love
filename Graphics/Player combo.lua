@@ -97,7 +97,9 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 		if tns == "Miss" then
 			worst_judgment = 1
 		else
-			worst_judgment = math.max(worst_judgment, string.sub(tns,2,2))
+			local subtns = tonumber(string.sub(tns,2,2))
+			-- lua.ReportScriptError( subtns .. "  " .. tostring(worst_judgment) )
+			worst_judgment = math.max(worst_judgment, subtns)
 			if worst_judgment >= 4 then
 				worst_judgment = 1
 			end

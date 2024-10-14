@@ -281,7 +281,7 @@ return Def.ActorFrame{
 				local tnt = ToEnumShortString(tapnote:GetTapNoteType())
 				if tnt == "Tap" or tnt == "HoldHead" or tnt == "Lift" then
 					local tns = ToEnumShortString(param.TapNoteScore)
-					if tnt ~= "Lift" and tns == "Miss" and tapnote:GetTapNoteResult():GetHeld() then
+					if tnt ~= "Lift" and tns == "Miss" and (tapnote:GetTapNoteResult().GetHeld and tapnote:GetTapNoteResult():GetHeld()) then
 						isHeld = true
 					end
 				end
