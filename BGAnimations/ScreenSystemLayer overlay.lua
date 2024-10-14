@@ -416,7 +416,7 @@ local NewSessionRequestProcessor = function(res, gsInfo)
 	-- All services are enabled, display a green check.
 	if SL.GrooveStats.GetScores and SL.GrooveStats.Leaderboard and SL.GrooveStats.AutoSubmit then
 		if ThemePrefs.Get("EnableBoogieStats") then
-			if string.find(PREFSMAN:GetPreference("HttpAllowHosts"), "boogiestats.andr.host") then
+			if string.find(PREFSMAN:GetPreference("NetworkAllowHosts"), "boogiestats.andr.host") then
 				groovestats:settext("✔ BoogieStats")
 			else
 				groovestats:settext("✔ GrooveStats (BoogieStats host not in allow list)")
@@ -487,7 +487,7 @@ t[#t+1] = Def.ActorFrame{
 		ResetCommand=function(self)
 			self:visible(ThemePrefs.Get("EnableGrooveStats"))
 			if ThemePrefs.Get("EnableBoogieStats") then
-				if string.find(PREFSMAN:GetPreference("HttpAllowHosts"), "boogiestats.andr.host") then
+				if string.find(PREFSMAN:GetPreference("NetworkAllowHosts"), "boogiestats.andr.host") then
 					self:settext("     BoogieStats")
 				else
 					self:settext("     GrooveStats (BoogieStats host not in allow list)")
