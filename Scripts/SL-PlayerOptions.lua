@@ -826,9 +826,11 @@ local Overrides = {
 
 			-- First determine the set of actual enabled windows.
 			local windows = {true,true,true,true,true}
-			local disabledWindows = playeroptions:GetDisabledTimingWindows()
-			for w in ivalues(disabledWindows) do
-				windows[tonumber(ToEnumShortString(w):sub(-1))] = false
+			if not IsOutFox() then
+				local disabledWindows = playeroptions:GetDisabledTimingWindows()
+				for w in ivalues(disabledWindows) do
+					windows[tonumber(ToEnumShortString(w):sub(-1))] = false
+				end
 			end
 
 			-- Compare them to any of our available selections
@@ -858,13 +860,15 @@ local Overrides = {
 		end,
 		SaveSelections = function(self, list, pn)
 			local mods, playeroptions = GetModsAndPlayerOptions(pn)
-			for i=1,#list do
-				if list[i] then
-					mods.TimingWindows = self.Values[i]
-					playeroptions:ResetDisabledTimingWindows()
-					for i,enabled in ipairs(mods.TimingWindows) do
-						if not enabled then
-							playeroptions:DisableTimingWindow("TimingWindow_W"..i)
+			if not IsOutFox() then
+				for i=1,#list do
+					if list[i] then
+						mods.TimingWindows = self.Values[i]
+						playeroptions:ResetDisabledTimingWindows()
+						for i,enabled in ipairs(mods.TimingWindows) do
+							if not enabled then
+								playeroptions:DisableTimingWindow("TimingWindow_W"..i)
+							end
 						end
 					end
 				end

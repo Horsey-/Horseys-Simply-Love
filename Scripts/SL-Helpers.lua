@@ -336,7 +336,10 @@ end
 SetGameModePreferences = function()
 	-- apply the preferences associated with this SL GameMode (Casual, ITG, FA+)
 	for key,val in pairs(SL.Preferences[SL.Global.GameMode]) do
-		PREFSMAN:SetPreference(key, val)
+		-- Should only check if the preferences actually exist before applying them.
+		if PREFSMAN:PreferenceExists(key) then
+			PREFSMAN:SetPreference(key, val)
+		end
 	end
 
 	--------------------------------------------

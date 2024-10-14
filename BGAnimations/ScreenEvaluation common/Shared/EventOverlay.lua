@@ -508,7 +508,7 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 						local curr = improvement["current"]
 						local prev = curr - improvement["gained"]
 						
-						table.insert(box_clearType,prev,curr)
+						-- table.insert(box_clearType,prev,curr)
 
 						table.insert(
 							statImprovements,
