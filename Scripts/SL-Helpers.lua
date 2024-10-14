@@ -852,8 +852,20 @@ GetColumnMapping = function(player)
 	local left = po:Left()
 	local right = po:Right()
 	local mirror = po:Mirror()
-	local udmirror = po:UDMirror()
-	local lrmirror = po:LRMirror()
+	local udmirror = function()
+		if IsOutFox() then 
+			return false 
+		else 
+			po:UDMirror()
+		end
+	end
+	local lrmirror = function()
+		if IsOutFox() then 
+			return false 
+		else 
+			po:LRMirror()
+		end
+	end
 
 	-- Combining flip and invert results in unusual spacing so ignore it.
 	if flip and invert then
