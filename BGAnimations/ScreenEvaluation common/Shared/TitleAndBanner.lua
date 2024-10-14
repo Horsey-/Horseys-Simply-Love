@@ -22,7 +22,7 @@ if SongOrCourse and SongOrCourse:HasBanner() then
 			if GAMESTATE:IsCourseMode() then
 				self:LoadFromCourse( GAMESTATE:GetCurrentCourse() ):animate(false)
 			else
-				self:LoadFromSong( GAMESTATE:GetCurrentSong() ):animate(false)
+				self:LoadFromSong( GAMESTATE:GetCurrentSong() )
 			end
 			self:y(66):setsize(banner.width, 164):zoom(banner.zoom)
 		end,
