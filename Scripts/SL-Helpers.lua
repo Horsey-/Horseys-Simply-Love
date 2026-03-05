@@ -931,11 +931,11 @@ GetColumnMapping = function(player)
 		column_mapping = {column_mapping[4], column_mapping[3], column_mapping[2], column_mapping[1]}
 	end
 
-	if udmirror then
+	if udmirror() then
 		column_mapping = {column_mapping[1], column_mapping[3], column_mapping[2], column_mapping[4]}
 	end
 
-	if lrmirror then
+	if lrmirror() then
 		column_mapping = {column_mapping[4], column_mapping[2], column_mapping[3], column_mapping[1]}
 	end
 
